@@ -9,8 +9,8 @@ FILE_DESCRIPTION(
 /* implementation_level */ '2;1');
 
 FILE_NAME(
-/* name */ 'misc-battery-tray-placeholder.step',
-/* time_stamp */ '2026-11-07T17:53:47-04:00',
+/* name */ 'camera-luxonis-oak-d-pro-heatsink.step',
+/* time_stamp */ '2026-11-09T18:20:31-04:00',
 /* author */ (''),
 /* organization */ (''),
 /* preprocessor_version */ 'ST-DEVELOPER v20.2',
@@ -170,31 +170,31 @@ POSITIVE_RATIO_MEASURE(7850.),#111);
 #151=DIRECTION('center_axis',(0.,0.,1.));
 #152=DIRECTION('ref_axis',(1.,0.,0.));
 #153=CARTESIAN_POINT('',(0.,0.,0.));
-#154=CARTESIAN_POINT('Origin',(80.,27.5,0.));
-#155=CARTESIAN_POINT('',(80.,27.5,0.));
-#156=CARTESIAN_POINT('',(-80.,27.5,0.));
-#157=CARTESIAN_POINT('',(80.,27.5,0.));
-#158=CARTESIAN_POINT('',(-80.,27.5,3.));
-#159=CARTESIAN_POINT('',(-80.,27.5,0.));
-#160=CARTESIAN_POINT('',(80.,27.5,3.));
-#161=CARTESIAN_POINT('',(80.,27.5,3.));
-#162=CARTESIAN_POINT('',(80.,27.5,0.));
-#163=CARTESIAN_POINT('Origin',(80.,-27.5,0.));
-#164=CARTESIAN_POINT('',(80.,-27.5,0.));
-#165=CARTESIAN_POINT('',(80.,-27.5,0.));
-#166=CARTESIAN_POINT('',(80.,-27.5,3.));
-#167=CARTESIAN_POINT('',(80.,-27.5,3.));
-#168=CARTESIAN_POINT('',(80.,-27.5,0.));
-#169=CARTESIAN_POINT('Origin',(-80.,-27.5,0.));
-#170=CARTESIAN_POINT('',(-80.,-27.5,0.));
-#171=CARTESIAN_POINT('',(-80.,-27.5,0.));
-#172=CARTESIAN_POINT('',(-80.,-27.5,3.));
-#173=CARTESIAN_POINT('',(-80.,-27.5,3.));
-#174=CARTESIAN_POINT('',(-80.,-27.5,0.));
-#175=CARTESIAN_POINT('Origin',(-80.,27.5,0.));
-#176=CARTESIAN_POINT('',(-80.,27.5,0.));
-#177=CARTESIAN_POINT('',(-80.,27.5,3.));
-#178=CARTESIAN_POINT('Origin',(0.,0.,3.));
+#154=CARTESIAN_POINT('Origin',(4.435,39.5,0.));
+#155=CARTESIAN_POINT('',(4.435,39.5,0.));
+#156=CARTESIAN_POINT('',(-4.435,39.5,0.));
+#157=CARTESIAN_POINT('',(4.435,39.5,0.));
+#158=CARTESIAN_POINT('',(-4.435,39.5,25.));
+#159=CARTESIAN_POINT('',(-4.435,39.5,0.));
+#160=CARTESIAN_POINT('',(4.435,39.5,25.));
+#161=CARTESIAN_POINT('',(4.435,39.5,25.));
+#162=CARTESIAN_POINT('',(4.435,39.5,0.));
+#163=CARTESIAN_POINT('Origin',(4.435,-39.5,0.));
+#164=CARTESIAN_POINT('',(4.435,-39.5,0.));
+#165=CARTESIAN_POINT('',(4.435,-39.5,0.));
+#166=CARTESIAN_POINT('',(4.435,-39.5,25.));
+#167=CARTESIAN_POINT('',(4.435,-39.5,25.));
+#168=CARTESIAN_POINT('',(4.435,-39.5,0.));
+#169=CARTESIAN_POINT('Origin',(-4.435,-39.5,0.));
+#170=CARTESIAN_POINT('',(-4.435,-39.5,0.));
+#171=CARTESIAN_POINT('',(-4.435,-39.5,0.));
+#172=CARTESIAN_POINT('',(-4.435,-39.5,25.));
+#173=CARTESIAN_POINT('',(-4.435,-39.5,25.));
+#174=CARTESIAN_POINT('',(-4.435,-39.5,0.));
+#175=CARTESIAN_POINT('Origin',(-4.435,39.5,0.));
+#176=CARTESIAN_POINT('',(-4.435,39.5,0.));
+#177=CARTESIAN_POINT('',(-4.435,39.5,25.));
+#178=CARTESIAN_POINT('Origin',(0.,0.,25.));
 #179=CARTESIAN_POINT('Origin',(0.,0.,0.));
 #180=UNCERTAINTY_MEASURE_WITH_UNIT(LENGTH_MEASURE(0.01),#184,
 'DISTANCE_ACCURACY_VALUE',
@@ -240,19 +240,19 @@ SOLID_ANGLE_UNIT()
 #189=PRODUCT_DEFINITION_SHAPE('',$,#192);
 #190=SHAPE_REPRESENTATION('',(#120),#182);
 #191=PRODUCT_DEFINITION_CONTEXT('part definition',#196,'design');
-#192=PRODUCT_DEFINITION('2026-11-07-17-53-47-969',
-'misc battery tray (placeholder) [25 g]',#193,#191);
+#192=PRODUCT_DEFINITION('2026-11-09-18-20-31-303',
+'camera Luxonis OAK-D Pro heatsink [12 g]',#193,#191);
 #193=PRODUCT_DEFINITION_FORMATION('',$,#198);
 #194=PRODUCT_RELATED_PRODUCT_CATEGORY(
-'misc battery tray (placeholder) [25 g]',
-'misc battery tray (placeholder) [25 g]',(#198));
+'camera Luxonis OAK-D Pro heatsink [12 g]',
+'camera Luxonis OAK-D Pro heatsink [12 g]',(#198));
 #195=APPLICATION_PROTOCOL_DEFINITION('international standard',
 'automotive_design',2009,#196);
 #196=APPLICATION_CONTEXT(
 'Core Data for Automotive Mechanical Design Process');
 #197=PRODUCT_CONTEXT('part definition',#196,'mechanical');
-#198=PRODUCT('2026-11-07-17-53-47-969',
-'misc battery tray (placeholder) [25 g]',$,(#197));
+#198=PRODUCT('2026-11-09-18-20-31-303',
+'camera Luxonis OAK-D Pro heatsink [12 g]',$,(#197));
 #199=PRESENTATION_STYLE_ASSIGNMENT((#201));
 #200=PRESENTATION_STYLE_ASSIGNMENT((#202));
 #201=SURFACE_STYLE_USAGE(.BOTH.,#203);

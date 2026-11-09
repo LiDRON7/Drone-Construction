@@ -6,6 +6,7 @@ LiDRON's drone models and build requirements.
 |---|---|
 | Print a part | `3D Models/Widow/Printed Parts/<part>/`, open the `.3mf` in Anycubic Slicer Next |
 | See the whole drone | `3D Models/Widow/Full Drone/widow-full-drone.f3d`, open in Fusion |
+| Know Widow's parts, sizes and weights | [`3D Models/Widow/README.md`](3D%20Models/Widow/README.md) |
 | Know what to build next | [Issues](https://github.com/LiDRON7/Drone-Construction/issues): one user story or task each |
 
 <img src="3D%20Models/Widow/Full%20Drone/widow-full-drone-preview.png" width="600" alt="Widow, the full drone model">
@@ -15,7 +16,7 @@ LiDRON's drone models and build requirements.
 | | Part | Print | Material |
 |---|---|---|---|
 | <img src="3D%20Models/Widow/Printed%20Parts/Propeller%20Guard/propeller-guard-preview.png" width="160"> | [Propeller Guard](3D%20Models/Widow/Printed%20Parts/Propeller%20Guard) | 6 | PLA or PETG |
-| <img src="3D%20Models/Widow/Printed%20Parts/Landing%20Leg/landing-leg-preview.png" width="160"> | [Landing Leg](3D%20Models/Widow/Printed%20Parts/Landing%20Leg) | 2 | PETG |
+| <img src="3D%20Models/Widow/Printed%20Parts/Landing%20Leg/landing-leg-preview.png" width="160"> | [Landing Leg](3D%20Models/Widow/Printed%20Parts/Landing%20Leg) (one mount on the battery plate for both legs, the battery and the camera, plus the feet) | 1 mount, 2 feet | PETG |
 | <img src="3D%20Models/Widow/Printed%20Parts/GPS%20Mast/gps-mast-preview.png" width="160"> | [GPS Mast](3D%20Models/Widow/Printed%20Parts/GPS%20Mast) | 1 | PETG |
 
 Each part's folder has the same five files:
