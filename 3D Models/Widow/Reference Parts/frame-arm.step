@@ -10,7 +10,7 @@ FILE_DESCRIPTION(
 
 FILE_NAME(
 /* name */ 'frame-arm.step',
-/* time_stamp */ '2026-11-09T20:05:22-04:00',
+/* time_stamp */ '2026-11-09T21:07:06-04:00',
 /* author */ (''),
 /* organization */ (''),
 /* preprocessor_version */ 'ST-DEVELOPER v20.2',
@@ -383,7 +383,7 @@ SOLID_ANGLE_UNIT()
 #331=PRODUCT_DEFINITION_SHAPE('',$,#334);
 #332=SHAPE_REPRESENTATION('',(#210),#324);
 #333=PRODUCT_DEFINITION_CONTEXT('part definition',#338,'design');
-#334=PRODUCT_DEFINITION('2026-11-09-20-05-22-867','frame arm #1 [30 g]',
+#334=PRODUCT_DEFINITION('2026-11-09-21-07-06-049','frame arm #1 [30 g]',
 #335,#333);
 #335=PRODUCT_DEFINITION_FORMATION('',$,#340);
 #336=PRODUCT_RELATED_PRODUCT_CATEGORY('frame arm #1 [30 g]',
@@ -393,7 +393,7 @@ SOLID_ANGLE_UNIT()
 #338=APPLICATION_CONTEXT(
 'Core Data for Automotive Mechanical Design Process');
 #339=PRODUCT_CONTEXT('part definition',#338,'mechanical');
-#340=PRODUCT('2026-11-09-20-05-22-867','frame arm #1 [30 g]',$,(#339));
+#340=PRODUCT('2026-11-09-21-07-06-049','frame arm #1 [30 g]',$,(#339));
 #341=PRESENTATION_STYLE_ASSIGNMENT((#343));
 #342=PRESENTATION_STYLE_ASSIGNMENT((#344));
 #343=SURFACE_STYLE_USAGE(.BOTH.,#345);

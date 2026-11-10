@@ -5,9 +5,12 @@
 # One printed plate under the Tarot's two 10 mm payload rods (they hang on the frame's 4 vibration dampers), held by
 # 6 printed rod clamps. Front to back it carries:
 #   OAK-D Pro  - cradle at the front, looking forward and TILT deg down (same cradle as Widow's leg mount)
-#   Puck LITE  - on its side: spin axis pointing forward, so it sweeps a line straight down under the drone (the
-#                landing spot). Its base bolts to a wall with the 1/4-20 screw and 2 pins; its cable goes up
-#                through a slot in the plate, Velodyne's 0 deg mark (opposite the cable) points straight down.
+#   Puck LITE  - on its side with the spin axis across the drone, so its scan sweeps front to back through the
+#                ground straight under the drone (the landing spot). Its base bolts to a side wall (1/4-20 screw +
+#                2 pins) and a printed strap round its top cap bolts it to a saddle (outside the scan window).
+#                Turned so the cable leaves up and forward at CABLE_ANG: the plug stays under the plate, clear of
+#                the rod, and the cable goes up through a slot. Velodyne's 0 deg mark (opposite the cable) points
+#                down and back at the same angle.
 #   battery    - 6S 5200 across the drone behind the wall, 2 x 20 mm straps through the plate
 #   interface box (under the plate, velcro) and the 12 V step-down for the LiDAR (on top of the plate, between the rods)
 # Print coords: the plate's top (the rod side) on the bed, everything else grows up (= down in flight). x forward.
@@ -22,9 +25,11 @@ INSERT_D, INSERT_L, SCREW_D = 3.6, 4.0, 2.9  # M2.5 heat-set inserts (same EST a
 LID_D, LID_H, LID_OPT = 103.3, 71.7, 37.8
 PIN_SP, PIN_HOLE = 88.9, 4.0                # 2 pins on the 90 deg line, 5/32 in (3.97 mm) steel dowels pressed in
 QTR_D = 6.6                                 # 1/4-20 clearance: 1/4-20 x 1/2 in screw from behind the wall
-LID_GAP, WALL_T, WALL_HW, WALL_BELOW = 2.0, 6.0, 55.0, 14.0
-GUS_Y, GUS_T, GUS_X = 40.0, 5.0, 12.0       # 2 gussets behind the wall
-CABLE_SLOT = (0.0, 20.0, 9.0)               # x from, x to, half width: the LiDAR cable goes up through the plate
+LID_GAP, LID_X0 = 2.0, -10.0                # gap under the plate (kept small: ground clearance); LiDAR's back edge (x)
+CABLE_ANG, CONN = 45.0, 12.7                # cable leaves this far forward of straight up; plug sticks out this far (datasheet)
+WALL_T, WALL_HW = 6.0, 50.5                 # side wall the base bolts to, half length along x
+GUS_XS, GUS_T, GUS_D = (-40.0, 40.0), 5.0, 12.0   # 2 gussets on the wall's outer side
+CAP_A, CAP_W, CAP_T, EAR, EAR_H = 64.0, 12.0, 4.0, 9.0, 6.0   # top-cap strap: centre from the base, width, ring, ear length, ear thickness
 # battery: PowerHobby 6S 5200 50C (listing: 133 x 43.5 x 49.5, 658 g), across the drone
 BAT_L, BAT_W, BAT_H, BAT_FIT = 133.0, 43.5, 49.5, 1.0
 BAT_X0 = -24.0                              # battery front face (x)
@@ -33,12 +38,13 @@ STRAP_W, STRAP_T, STRAP_Y = 22.0, 3.5, 53.0  # 20 mm velcro straps, centred this
 # plate outline: front part (LiDAR + camera), battery wings, back part (interface box)
 PL_X_BACK, WING_X, WING_HW, FRONT_HW, BACK_HW = -134.0, (-17.0, -78.0), 66.0, 56.0, 40.0
 IFB = (75.0, 53.0, 28.0)                    # EST: Velodyne interface box (y, x, z): measure it
-CLAMP_X = (-112.0, -40.0, 40.0)             # clamps on each rod, clear of the dampers (x 66-80)
+CLAMP_X = (-112.0, -40.0, 56.0)             # clamps on each rod, clear of the dampers (x 66-80) and the cable slot
 CL_L, CL_IN, CL_OUT, CL_TOP = 20.0, 3.0, 5.5, 2.5   # clamp length, wall toward the centre, outer wall (grub insert), over the rod
 # OAK-D Pro cradle: identical numbers to Widow's landing_leg.py
 CAM_L, CAM_H, CAM_D, CAM_BODY, CAM_USB = 96.96, 29.45, 23.15, 14.28, 9.45
-CAM_FIT, TILT = 0.4, 15.0
-CAM_BACK_X = LID_H + 4.3                    # camera's lowest back corner: just ahead of the LiDAR's top face
+CAM_FIT, TILT = 0.4, 10.0                   # deg down: 10 sees above level in forward flight; props/guards take ~9 % (top corners, mask them)
+R_L = LID_D / 2 + 0.15                      # strap/saddle bore
+CAM_BACK_X = LID_X0 + LID_D / 2 + R_L + EAR + 3.5   # camera's lowest back corner: just ahead of the strap saddle
 NOSE_T, END_T, END_BLOCK = PL_T, 3.0, 16.0
 LIP, LIP_T, LENS_EDGE = 3.5, 2.0, 8.0
 CAM_STRAP_W, CAM_STRAP_T = 17.0, 3.5
@@ -49,7 +55,11 @@ SIGMA_LAYER_MPA, SF_MIN = 15.0, 3.5
 import adsk.core, adsk.fusion, math, os
 cm = lambda mm: mm / 10.0
 z_ax = PL_T + LID_GAP + LID_D / 2             # LiDAR axis, print z
-wall_bot = z_ax + WALL_BELOW
+x_c, yb = LID_X0 + LID_D / 2, -LID_H / 2         # LiDAR axis x; its base face (print y), centring it across the drone
+a_c = math.radians(CABLE_ANG)
+pin_d = ((PIN_SP / 2) * math.cos(a_c), (PIN_SP / 2) * math.sin(a_c))   # pins sit on the line square to the cable
+wall_bot = z_ax + pin_d[1] + PIN_HOLE / 2 + 4
+y_c = yb + CAP_A                               # strap centre (print y)
 bat_x1 = BAT_X0 - BAT_W - BAT_FIT
 cl_w = ROD_D + FIT + CL_IN + CL_OUT
 cl_h = (ROD_Z + ROD_D / 2 + CL_TOP) - Z_PT     # clamp height above the plate's top face
@@ -60,8 +70,12 @@ assert ROD_Z + ROD_D / 2 + CL_TOP <= -25.2 - 1.5, 'clamps hit the bottom plate (
 assert all(abs(abs(x) - 73) > CL_L / 2 + 6 for x in CLAMP_X), 'a clamp sits on a damper'
 assert bore_z - (ROD_D + FIT) / 2 >= INSERT_L + 1.5, 'clamp inserts run into the rod bore'
 assert CL_OUT >= INSERT_L + 0.8, 'grub screw insert does not fit in the clamp wall'
-assert WALL_HW >= PIN_SP / 2 + PIN_HOLE / 2 + 4, 'pin holes too close to the wall edge'
-assert BAT_X0 <= -WALL_T - GUS_X - 2, 'battery runs into the gussets'
+assert WALL_HW >= pin_d[0] + PIN_HOLE / 2 + 4, 'pin holes too close to the wall edge'
+assert x_c - R_L - EAR >= BAT_X0 + RAIL_T + 1, 'LiDAR strap saddle runs into the battery rail'
+assert LID_X0 >= BAT_X0 + 3.5 + 2 and x_c - WALL_HW >= BAT_X0 + 3.5 + 1, 'LiDAR or its wall runs into the battery strap'
+assert z_ax - (LID_D / 2 + CONN) * math.cos(a_c) >= PL_T + 1, 'LiDAR plug hits the plate'
+assert LID_H - 14.8 <= CAP_A - CAP_W / 2 and CAP_A + CAP_W / 2 <= LID_H - 1, 'strap must sit on the top cap, off the scan window'
+assert EAR >= INSERT_D + 2 * 2.4 and z_ax - PL_T >= INSERT_L + 2, 'strap saddle ears too small for the inserts'
 assert WING_X[0] >= BAT_X0 + 3.5 + 2 and WING_X[1] <= bat_x1 - STRAP_T - 2, 'battery wings too short for the straps'
 assert STRAP_Y - STRAP_W / 2 >= ROD_Y + (ROD_D + FIT) / 2 + CL_OUT + 1, 'strap slots run into the clamps'
 assert STRAP_Y + STRAP_W / 2 <= WING_HW - 2, 'strap slots too close to the wing edge'
@@ -79,7 +93,7 @@ Bk = (CAM_BACK_X + cH * math.sin(t_), NOSE_T)
 Ft = mv(Bk, f_, cD)
 cam_c = mv(mv(Bk, f_, cD / 2), u_, -cH / 2)
 E = CAM_STRAP_T + 3.0
-assert mv(Bk, u_, -(cH + E))[0] >= LID_H + 1.5, 'camera cradle runs into the LiDAR'
+assert mv(Bk, u_, -(cH + E))[0] >= max(LID_X0 + LID_D, x_c + R_L + EAR) + 1.5, 'camera cradle runs into the LiDAR or its strap'
 assert cL / 2 + END_T <= FRONT_HW, 'camera wider than the plate'
 
 for d in [d for d in app.documents if d.name.startswith('Huntsman payload')]:
@@ -153,13 +167,29 @@ outline = [(xf, -FRONT_HW), (xf, FRONT_HW), (WING_X[0], FRONT_HW), (WING_X[0], W
            (WING_X[1], BACK_HW), (PL_X_BACK, BACK_HW), (PL_X_BACK, -BACK_HW), (WING_X[1], -BACK_HW),
            (WING_X[1], -WING_HW), (WING_X[0], -WING_HW), (WING_X[0], -FRONT_HW)]
 body = extrude(c, poly(sketch(c, 'xy'), [(x, y, 0) for x, y in outline]), NEW, PL_T).bodies.item(0)
-extrude(c, box_xy(sketch(c, 'xy', PL_T), -WALL_T, -WALL_HW, 0, WALL_HW, PL_T), JOIN, wall_bot - PL_T, body=body)   # LiDAR wall
-for sy in (-1, 1):                                             # gussets behind the wall
-    sk = poly(sketch(c, 'xz'), [(-WALL_T + 0.5, 0, PL_T - 0.5), (-WALL_T - GUS_X, 0, PL_T - 0.5), (-WALL_T + 0.5, 0, z_ax)])
+extrude(c, box_xy(sketch(c, 'xy', PL_T), x_c - WALL_HW, yb - WALL_T, x_c + WALL_HW, yb, PL_T), JOIN, wall_bot - PL_T, body=body)   # LiDAR side wall
+for gx in GUS_XS:                                              # gussets on the wall's outer side
+    sk = poly(sketch(c, 'yz'), [(0, yb - WALL_T + 0.5, PL_T - 0.5), (0, yb - WALL_T - GUS_D, PL_T - 0.5), (0, yb - WALL_T + 0.5, z_ax)])
     g = extrude(c, sk, NEW, sym=GUS_T).bodies.item(0)
-    mi = adsk.core.Matrix3D.create(); mi.translation = adsk.core.Vector3D.create(0, cm(sy * GUS_Y), 0)
+    mi = adsk.core.Matrix3D.create(); mi.translation = adsk.core.Vector3D.create(cm(x_c + gx), 0, 0)
     coll = adsk.core.ObjectCollection.create(); coll.add(g)
     m = c.features.moveFeatures.createInput2(coll); m.defineAsFreeMove(mi); c.features.moveFeatures.add(m)
+body = merge(c)
+sk = sketch(c, 'xz')                                           # 1/4-20 screw and the 2 pins through the wall (before the saddle exists)
+circle(sk, (x_c, 0, z_ax), QTR_D)
+for k in (-1, 1):
+    circle(sk, (x_c + k * pin_d[0], 0, z_ax + k * pin_d[1]), PIN_HOLE)
+extrude(c, sk, CUT, sym=2 * (-yb + WALL_T + 1), body=body)
+# top-cap strap saddle: a block down to the LiDAR axis with the cap's half-circle cut out, 2 inserts in its ears
+sad = extrude(c, box_xy(sketch(c, 'xy', PL_T), x_c - R_L - EAR, -CAP_W / 2, x_c + R_L + EAR, CAP_W / 2, PL_T), NEW, z_ax - PL_T).bodies.item(0)
+extrude(c, circle(sketch(c, 'xz'), (x_c, 0, z_ax), 2 * R_L), CUT, sym=CAP_W + 2, body=sad)
+sk = sketch(c, 'xy', z_ax - INSERT_L - 1)
+for k in (-1, 1):
+    circle(sk, (x_c + k * (R_L + EAR / 2), 0, z_ax - INSERT_L - 1), INSERT_D)
+extrude(c, sk, CUT, INSERT_L + 2, body=sad)
+mi = adsk.core.Matrix3D.create(); mi.translation = adsk.core.Vector3D.create(0, cm(y_c), 0)
+coll = adsk.core.ObjectCollection.create(); coll.add(sad)
+m = c.features.moveFeatures.createInput2(coll); m.defineAsFreeMove(mi); c.features.moveFeatures.add(m)
 sk = sketch(c, 'xy', PL_T)
 for x0 in (BAT_X0 + RAIL_T, bat_x1):                           # battery rails, front and back
     box_xy(sk, x0 - RAIL_T, -RAIL_HW, x0, RAIL_HW, PL_T)
@@ -184,17 +214,11 @@ usb_x = Ft[0] - (CAM_USB + CAM_FIT / 2) * math.cos(t_)
 sk = sketch(c, 'xy', -1)
 for sy in (-1, 1):
     box_xy(sk, usb_x - 7, sy * 6, usb_x + 7, sy * 22, -1)      # camera USB-C windows (plug either side)
-x0, x1, hw = CABLE_SLOT
-box_xy(sk, x0, -hw, x1, hw, -1)                                # LiDAR cable slot
+box_xy(sk, x_c + 30, yb - 1, x_c + 52, yb + 19, -1)              # LiDAR cable slot, over the plug
 for x in (BAT_X0 + 3.5, bat_x1):                               # strap slots in front of and behind the battery
     for sy in (-1, 1):
         box_xy(sk, x - STRAP_T, sy * STRAP_Y - STRAP_W / 2, x, sy * STRAP_Y + STRAP_W / 2, -1)
 extrude(c, sk, CUT, PL_T + 2, body=body)
-sk = sketch(c, 'yz', 1)
-circle(sk, (1, 0, z_ax), QTR_D)
-for sy in (-1, 1):
-    circle(sk, (1, sy * PIN_SP / 2, z_ax), PIN_HOLE)
-extrude(c, sk, CUT, -(WALL_T + 2), body=body)                  # 1/4-20 screw and the 2 pins through the wall
 sk = sketch(c, 'xy', -1)
 for x in CLAMP_X:
     for sy in (-1, 1):
@@ -208,6 +232,23 @@ for x in CLAMP_X:
             circle(sk, (x + dx, sy * ROD_Y, PL_T - 1.8), 5.2)
 extrude(c, sk, CUT, 2.0, body=body)                            # counterbores: heads sit flush under the plate
 carrier = c.bRepBodies.item(0); carrier.name = 'payload carrier'
+
+# ---- LiDAR strap: lower half ring round the top cap, ears screwed up into the saddle's inserts (carrier coords)
+st_occ = part('lidar strap'); c = st_occ.component
+st = extrude(c, circle(sketch(c, 'xz'), (x_c, 0, z_ax), 2 * (R_L + CAP_T)), NEW, sym=CAP_W).bodies.item(0)
+ears = extrude(c, box_xy(sketch(c, 'xy', z_ax), x_c - R_L - EAR, -CAP_W / 2, x_c + R_L + EAR, CAP_W / 2, z_ax), NEW, EAR_H).bodies.item(0)
+combine(c, st, [ears], JOIN)
+st = c.bRepBodies.item(0)
+extrude(c, box_xy(sketch(c, 'xy', PL_T - 10), x_c - R_L - EAR - 2, -CAP_W, x_c + R_L + EAR + 2, CAP_W, PL_T - 10), CUT, z_ax - PL_T + 10, body=st)   # keep the lower half
+extrude(c, circle(sketch(c, 'xz'), (x_c, 0, z_ax), 2 * R_L), CUT, sym=CAP_W + 2, body=st)
+sk = sketch(c, 'xy', z_ax - 1)
+for k in (-1, 1):
+    circle(sk, (x_c + k * (R_L + EAR / 2), 0, z_ax - 1), SCREW_D)
+extrude(c, sk, CUT, EAR_H + 2, body=st)                        # 2 x M2.5 x 10 up into the saddle
+mi = adsk.core.Matrix3D.create(); mi.translation = adsk.core.Vector3D.create(0, cm(y_c), 0)
+coll = adsk.core.ObjectCollection.create(); coll.add(st)
+m = c.features.moveFeatures.createInput2(coll); m.defineAsFreeMove(mi); c.features.moveFeatures.add(m)
+strap = c.bRepBodies.item(0); strap.name = 'lidar strap'
 
 # ---- rod clamp (clamp coords: plate face at z = 0, rod along x at y = 0, z = bore_z; outer side +y)
 cl_occ = part('rod clamp'); c = cl_occ.component
@@ -230,12 +271,14 @@ em = des.exportManager
 res = {'wall_stress_MPa': round(sigma_wall, 2), 'wall_sf': round(SIGMA_LAYER_MPA / sigma_wall, 1),
        'lidar_axis_flight_z': round(Z_PT - z_ax, 2), 'lidar_bottom_flight_z': round(Z_PT - z_ax - LID_D / 2, 2),
        'cam_centre_print': [round(v, 2) for v in cam_c], 'cam_lens_print': [round(v, 2) for v in mv(Ft, u_, -cH / 2)],
-       'battery_x': [BAT_X0, round(bat_x1, 2)], 'plate_front_x': round(xf, 2), 'clamp_h': round(cl_h, 2)}
-for name, occ, bd in (('payload-carrier', car_occ, carrier), ('rod-clamp', cl_occ, clamp)):
+       'battery_x': [BAT_X0, round(bat_x1, 2)], 'plate_front_x': round(xf, 2), 'clamp_h': round(cl_h, 2),
+       'lidar_axis_x': x_c, 'lidar_base_print_y': yb, 'strap_print_y': y_c}
+for name, occ, bd in (('payload-carrier', car_occ, carrier), ('rod-clamp', cl_occ, clamp), ('lidar-strap', st_occ, strap)):
     assert occ.component.bRepBodies.count == 1 and bd.lumps.count == 1, f'{name} is not one solid'
     em.execute(em.createSTEPExportOptions(os.path.join(OUT, f'{name}.step'), occ.component))   # mounting coords (the assembly uses these)
-    if name == 'rod-clamp':            # print it standing on its end: the rod hole goes up, no supports
-        R = adsk.core.Matrix3D.create(); R.setToRotation(math.radians(-90), adsk.core.Vector3D.create(0, 1, 0), adsk.core.Point3D.create(0, 0, 0))
+    if name in ('rod-clamp', 'lidar-strap'):   # clamp on its end (rod hole up); strap flat on its side
+        R = adsk.core.Matrix3D.create()
+        R.setToRotation(math.radians(-90), adsk.core.Vector3D.create(0, 1, 0) if name == 'rod-clamp' else adsk.core.Vector3D.create(1, 0, 0), adsk.core.Point3D.create(0, 0, 0))
         coll = adsk.core.ObjectCollection.create(); coll.add(bd)
         mi = occ.component.features.moveFeatures.createInput2(coll); mi.defineAsFreeMove(R); occ.component.features.moveFeatures.add(mi)
         bd = occ.component.bRepBodies.item(0)
@@ -247,7 +290,7 @@ for name, occ, bd in (('payload-carrier', car_occ, carrier), ('rod-clamp', cl_oc
                  'bbox_mm': [round((bb.maxPoint.x - bb.minPoint.x) * 10, 1), round((bb.maxPoint.y - bb.minPoint.y) * 10, 1), round((bb.maxPoint.z - bb.minPoint.z) * 10, 1)]}
 T = adsk.core.Matrix3D.create(); T.translation = adsk.core.Vector3D.create(cm(0), cm(110), 0); cl_occ.transform = T   # picture only
 des.activateRootComponent(); app.userInterface.activeSelections.clear()
-for occ in (car_occ, cl_occ):
+for occ in (car_occ, cl_occ, st_occ):
     for s in occ.component.sketches:
         s.isVisible = False
     for p in occ.component.constructionPlanes:

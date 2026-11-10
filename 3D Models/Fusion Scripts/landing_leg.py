@@ -34,7 +34,7 @@ POCKET_D, POCKET_H = HEAD_D + 1.5, HEAD_H + 0.7
 STRAP_XC = SCREW_X - SCREW_SLOT - POCKET_D / 2 - 1.5 - STRAP_W / 2   # strap groove centre: stops short of the pocket
 # OAK-D Pro (measured): length, height, depth with fins, body depth without fins, USB-C centre behind the front face
 CAM_L, CAM_H, CAM_D, CAM_BODY, CAM_USB = 96.96, 29.45, 23.15, 14.28, 9.45
-CAM_FIT, TILT = 0.4, 15.0               # TILT: deg down; keeps the front arm, prop and guard out of the top of the view
+CAM_FIT, TILT = 0.4, 10.0               # TILT: deg down. 10: sees 7.5 deg above level in forward flight; guard edges nick the top corners (1.4 %)
 CAM_BACK_X = 58.0                       # camera's lowest back corner; the battery's front end is at 54.7 (BATT_X in full_drone.py)
 NOSE_T, END_T, END_BLOCK = 4.0, 3.0, 16.0   # plate over the camera, end plates, blocks between plate and camera top at each end
 LIP, LIP_T, LENS_EDGE = 3.5, 2.0, 8.0   # front/back lips over the camera's ends; outer lens edge 8 mm from the end (photo, EST)

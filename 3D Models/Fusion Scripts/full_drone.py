@@ -113,25 +113,54 @@ add('power module Holybro PM02D', 'box', (20, 16, 10), (0, -40, PLATE_T + 5), 20
 add('misc wiring bundle (placeholder)', 'box', (60, 60, 5), (0, 0, TOP_Z - 3.5), 50)                  # EST
 # under the battery plate: battery strapped in the leg mount's tray, OAK-D Pro in the cradle on the mount's front
 # (landing_leg.py), facing the front (between the two front arms) and TILT deg down. The Pixhawk and GPS arrows point this way too.
-CAM_C, CAM_LENS, TILT = (73.24, 21.46), (84.61, 24.51), 15.0   # cam_centre_print_mm, cam_lens_print_mm, TILT in landing_leg.py
+CAM_C, CAM_LENS, TILT = (72.19, 20.74), (83.78, 22.79), 10.0   # cam_centre_print_mm, cam_lens_print_mm, TILT in landing_leg.py
 CAM_BACK_X = 58.0                                               # CAM_BACK_X in landing_leg.py
 ct, st = math.cos(math.radians(TILT)), math.sin(math.radians(TILT))
 cam_at = lambda k: (CAM_C[0] + k*ct, 0, BP_Z - CAM_C[1] - k*st)   # k mm forward along the camera axis from the pocket centre
 add('camera Luxonis OAK-D Pro', 'box', (14.28, 96.96, 29.45), cam_at((23.55 - 14.28)/2 - 0.2), 77.69, ry=TILT)        # body; 89.69 g measured in all
 add('camera Luxonis OAK-D Pro heatsink', 'box', (8.87, 79, 25), cam_at((23.55 - 8.87)/2 - 0.2 - 14.28), 12, ry=TILT)   # fins stop ~9 mm from each end (photo); split EST
 add('power battery 3S 5500mAh LiPo', 'box', (135.4, 43.2, 31.1), (BATT_X, 0, BP_Z - FL_T - 31.1/2), 361.98)    # measured; x is the balance trim
-# self-check: the camera sees over nothing it shouldn't. VFOV/HFOV EST (OAK-D Pro stereo ~72 deg wide, ~56 tall).
-HFOV, VFOV = 72.0, 56.0
+# self-check: rays over the camera's view (OAK-D Pro stereo 80 x 55 deg, spec sheet). No prop or arm may show;
+# the guard rings may nick the top corners (GUARD_MAX % of the view): fixed, close pixels the software masks.
+HFOV, VFOV, GUARD_MAX = 80.0, 55.0, 3.0
 lx, lz = CAM_LENS[0], BP_Z - CAM_LENS[1]
-up = math.tan(math.radians(VFOV/2 - TILT))
-for i in range(6):   # each arm tip's underside and the nearest point of its guard ring stay above the top of the view
-    t = math.radians(ARM0 + 60*i)
-    d_tip = math.hypot((R_MOTOR + 15)*math.cos(t) - lx, (R_MOTOR + 15)*math.sin(t))
-    d_ring = math.hypot(R_MOTOR*math.cos(t) - lx, R_MOTOR*math.sin(t)) - (101.6 + 8.4)
-    mx, my = R_MOTOR*math.cos(t) - lx, R_MOTOR*math.sin(t)
-    if abs(math.degrees(math.atan2(my, mx))) - math.degrees(math.asin(min(1, 110/math.hypot(mx, my)))) > HFOV/2 + 5:
-        continue                                                                      # arm and guard are outside the view's width
-    assert lz + d_tip*up < ARM_TOP - H_TIP - 3 and lz + d_ring*up < ARM_TOP - 3, f'arm {i+1} or its guard is in the top of the camera view'
+def _seg_hit(o, d, a, b, r):          # ray o + s d (s >= 0) passes within r of segment ab
+    dot = lambda p, q: sum(p[k]*q[k] for k in range(3))
+    v = [b[k]-a[k] for k in range(3)]; w = [o[k]-a[k] for k in range(3)]
+    A_, B_, C_, D_, E_ = dot(d, d), dot(d, v), dot(v, v), dot(d, w), dot(v, w)
+    den = A_*C_ - B_*B_
+    s, t = ((B_*E_ - C_*D_)/den, (A_*E_ - B_*D_)/den) if den > 1e-9 else (0.0, E_/C_)
+    s, t = max(s, 0.0), min(max(t, 0.0), 1.0)
+    p = [w[k] + s*d[k] - t*v[k] for k in range(3)]
+    return dot(p, p) <= r*r
+def _cam_ray(d):
+    o = (lx, 0.0, lz)
+    for i in range(6):
+        a = ARM0 + 60*i; c, s_ = math.cos(math.radians(a)), math.sin(math.radians(a)); cx, cy = R_MOTOR*c, R_MOTOR*s_
+        if _seg_hit(o, d, (ARM_R0*c, ARM_R0*s_, ARM_TOP - GAP/2), ((R_MOTOR + 15)*c, (R_MOTOR + 15)*s_, ARM_TOP - H_TIP/2), H_TIP/2 + 2):
+            return 'arm'
+        if d[2] > 1e-9:
+            t = (ARM_TOP + 2 + 23.5 - lz)/d[2]
+            if math.hypot(lx + t*d[0] - cx, t*d[1] - cy) <= 101.6:
+                return 'prop'
+        px, py = lx - cx, -cy; A_ = d[0]**2 + d[1]**2; B_ = 2*(px*d[0] + py*d[1]); C_ = px*px + py*py - 110.0**2
+        disc = B_*B_ - 4*A_*C_
+        if A_ > 1e-12 and disc >= 0:
+            for t in ((-B_ - math.sqrt(disc))/(2*A_), (-B_ + math.sqrt(disc))/(2*A_)):
+                hz = lz + t*d[2]; rel = (math.degrees(math.atan2(t*d[1] - cy, lx + t*d[0] - cx)) - a + 180) % 360 - 180
+                if t > 0 and ARM_TOP <= hz <= ARM_TOP + 28 and abs(rel) <= 95:
+                    return 'guard'
+    return None
+_hits, _n = {}, 0
+for _az in range(-int(HFOV/2), int(HFOV/2) + 1, 2):
+    for _el in range(-int(VFOV/2), int(VFOV/2) + 1, 2):
+        e, z_ = math.radians(-TILT + _el), math.radians(_az); _n += 1
+        k = _cam_ray((math.cos(e)*math.cos(z_), math.cos(e)*math.sin(z_), math.sin(e)))
+        if k:
+            _hits[k] = _hits.get(k, 0) + 1
+assert not _hits.get('arm') and not _hits.get('prop'), f'an arm or prop is in the camera view: {_hits}'
+assert 100*_hits.get('guard', 0)/_n <= GUARD_MAX, f'guards cover {100*_hits["guard"]/_n:.1f} % of the camera view'
+CAM_BLOCKED_PCT = round(100*sum(_hits.values())/_n, 1)
 skid_front = (110.0, LEG_Y + TUBE_L*sa + FOOT_FLOOR*sa)                         # skid end: x, |y|
 assert math.degrees(math.atan2(skid_front[1], skid_front[0] - lx)) > HFOV/2 + 5, 'a skid is in the camera view'
 assert BATT_X + 135.4/2 + 2 <= CAM_BACK_X, 'battery runs into the camera'
@@ -308,6 +337,6 @@ on_bottom = [p for p in PARTS if p[1] == 'box' and (abs(p[3][2] - p[2][2]/2 - PL
 on_battery_plate = [('landing leg mount plate', 'box', (34.6, 2*LEG_Y + 36, 6), (0, 0, BP_Z - 3), 0)]
 off_bp = sorted({p[0] for p in on_battery_plate for sx in (-1, 1) for sy in (-1, 1)
                  if not inside((p[3][0] + sx*p[2][0]/2, p[3][1] + sy*p[2][1]/2), bp_pts)})
-{'off_bottom_plate': off(on_bottom), 'off_battery_plate': off_bp, 'clashes': clashes, 'total_g': round(pp.mass*1000, 1), 'table_total_g': tm,
+{'camera_view_blocked_pct': CAM_BLOCKED_PCT, 'off_bottom_plate': off(on_bottom), 'off_battery_plate': off_bp, 'clashes': clashes, 'total_g': round(pp.mass*1000, 1), 'table_total_g': tm,
  'cg_mm': [round(pp.centerOfMass.x*10, 1), round(pp.centerOfMass.y*10, 1), round(pp.centerOfMass.z*10, 1)],
  'mass_mismatches': bad_mass, 'position_mismatches': bad_pos[:5], 'n_bad_pos': len(bad_pos), 'parts': len(PARTS), 'part_files': len(done)}

@@ -14,14 +14,15 @@ MAST_STEP = os.path.join(HERE, '..', 'Widow', 'Printed Parts', 'GPS Mast', 'gps-
 GROUND_Z = -245.3                  # bottom of the skid feet in the model
 TOP = 1.6                          # top face of the top plate
 # must match huntsman_payload.py
-Z_PT, ROD_Y, CLAMP_X, LID_OPT, LID_D, LID_H = -48.0, 30.0, (-112.0, -40.0, 40.0), 37.8, 103.3, 71.7
-LID_AX_Z, CAM_C, CAM_LENS, TILT = -105.65, (91.24, 21.46), (102.61, 24.51), 15.0   # camera points are print coords
+Z_PT, ROD_Y, CLAMP_X, LID_OPT, LID_D, LID_H = -48.0, 30.0, (-112.0, -40.0, 56.0), 37.8, 103.3, 71.7
+LID_AX_X, LID_AX_Z, CAM_C, CAM_LENS, TILT = 41.65, -105.65, (120.14, 20.74), (131.73, 22.79), 10.0   # camera points are print coords
+# LiDAR lies with its spin axis across the drone (y), base on the left: it scans front to back
 BAT_X0, BAT_X1 = -24.0, -68.5
-CARRIER_G, CLAMP_G = 163.1, 6.8     # PETG as sliced: payload carrier, each rod clamp
+CARRIER_G, CLAMP_G, STRAP_G = 212.8, 6.8, 10.7  # PETG as sliced: payload carrier, each rod clamp, LiDAR strap
 HFOV, VFOV = 72.0, 56.0            # OAK-D Pro RGB, deg
 # name: (shape, size, centre, grams). Sizes x, y, z. 'cyl_x' = (diameter, length) along x.
 PARTS = {
-    'lidar Velodyne Puck LITE':          ('cyl_x', (LID_D, LID_H), (LID_H / 2, 0, LID_AX_Z), 590),       # datasheet
+    'lidar Velodyne Puck LITE':          ('cyl_y', (LID_D, LID_H), (LID_AX_X, 0, LID_AX_Z), 590),        # datasheet
     'camera Luxonis OAK-D Pro':          ('cam', (14.28, 96.96, 29.45), (23.55 - 14.28) / 2 - 0.2, 77.69),   # body; 89.69 g measured in all
     'camera Luxonis OAK-D Pro heatsink': ('cam', (8.87, 79, 25), (23.55 - 8.87) / 2 - 0.2 - 14.28, 12),     # fins stop ~9 mm from each end (as Widow)
     'power battery 6S 5200 mAh':         ('box', (43.5, 133, 49.5), ((BAT_X0 + BAT_X1 + 1) / 2, 0, Z_PT - 4 - 24.75), 658),  # listing
@@ -79,7 +80,8 @@ for x in CLAMP_X:
         M = rot((0, 0, 1), 0 if sy > 0 else 180, (x, sy * ROD_Y, Z_PT))
         clamps.append(import_step(os.path.join(CARRIER, 'rod-clamp.step'), f'printed rod clamp', M))
 mast = import_step(MAST_STEP, 'printed GPS mast', rot((0, 0, 1), 0, (-55, 40, TOP)))
-ours = [carrier, mast] + clamps
+strap = import_step(os.path.join(CARRIER, 'lidar-strap.step'), 'printed lidar strap', rot((1, 0, 0), 180, (0, 0, Z_PT)))
+ours = [carrier, mast, strap] + clamps
 GUARD = os.path.join(HUNT, 'Printed Parts', 'Propeller Guard')
 ARM_ANGS, ARM_R, RING_R, RING_Z, RING_HALF = (30, 90, 150, -150, -90, -30), 343.0, 173.75, (6.0, 31.0), 95.0   # huntsman_propeller_guard.py
 for a in ARM_ANGS:                     # guard local coords: motor axis at 0, x outward, z = motor mount top
@@ -92,8 +94,8 @@ for name, (shape, size, c, g) in PARTS.items():
     elif shape == 'cam':                # c = mm forward along the camera axis from the pocket centre
         t = math.radians(TILT); c = cam_at(c); PARTS[name] = (shape, size, c, g)
         b = tbm.createBox(adsk.core.OrientedBoundingBox3D.create(P3(*c), V3(math.cos(t), 0, -math.sin(t)), V3(0, 1, 0), cm(size[0]), cm(size[1]), cm(size[2])))
-    elif shape == 'cyl_x':
-        b = tbm.createCylinderOrCone(P3(c[0] - size[1] / 2, c[1], c[2]), cm(size[0] / 2), P3(c[0] + size[1] / 2, c[1], c[2]), cm(size[0] / 2))
+    elif shape == 'cyl_y':
+        b = tbm.createCylinderOrCone(P3(c[0], c[1] - size[1] / 2, c[2]), cm(size[0] / 2), P3(c[0], c[1] + size[1] / 2, c[2]), cm(size[0] / 2))
     else:
         b = tbm.createCylinderOrCone(P3(c[0], c[1], c[2] - size[1] / 2), cm(size[0] / 2), P3(c[0], c[1], c[2] + size[1] / 2), cm(size[0] / 2))
     occ = new_occ(name); occ.component.bRepBodies.add(b); ours.append(occ)
@@ -119,7 +121,7 @@ for r in des.analyzeInterference(ii):
 # centre of mass from the table
 items = [(n, g, c) for n, (s, z_, c, g) in PARTS.items()]
 cc = carrier.physicalProperties.centerOfMass
-items += [('printed payload carrier', CARRIER_G, (cc.x * 10, cc.y * 10, cc.z * 10)), ('printed rod clamps x6', 6 * CLAMP_G, (-37, 0, Z_PT + 10))]
+items += [('printed lidar strap', STRAP_G, (LID_AX_X, -28.15, LID_AX_Z - 40)), ('printed payload carrier', CARRIER_G, (cc.x * 10, cc.y * 10, cc.z * 10)), ('printed rod clamps x6', 6 * CLAMP_G, (-37, 0, Z_PT + 10))]
 items += [(n, g, (0, 0, z)) for n, (g, z) in SPREAD.items() if n != 'printed GPS mast'] + [('printed GPS mast', 38.1, (-55, 40, TOP + 25))]
 M_tot = sum(g for _, g, _ in items)
 cg = [sum(g * c[i] for _, g, c in items) / M_tot for i in range(3)]
@@ -131,7 +133,7 @@ def aabb(o):
 leaves = [o for o in root.allOccurrences if o.bRepBodies.count and o.fullPathName.startswith('Tarot 680 PRO frame')]
 boxes = [(o.name, aabb(o)) for o in leaves if 'propeller' not in o.name]
 props = [aabb(o) for o in leaves if 'propeller' in o.name]
-boxes += [(o.component.name, aabb(o)) for o in ours if 'guard' not in o.component.name and 'arm clamp' not in o.component.name and o.component.name not in ('lidar Velodyne Puck LITE', 'printed payload carrier', 'camera Luxonis OAK-D Pro', 'camera Luxonis OAK-D Pro heatsink')]
+boxes += [(o.component.name, aabb(o)) for o in ours if 'guard' not in o.component.name and 'arm clamp' not in o.component.name and o.component.name not in ('lidar Velodyne Puck LITE', 'printed payload carrier', 'printed lidar strap', 'camera Luxonis OAK-D Pro', 'camera Luxonis OAK-D Pro heatsink')]
 def hit(o, d, box, tmax=30000.0):
     t0, t1 = 0.0, tmax
     for i in range(3):
@@ -167,10 +169,10 @@ def blocked(o, d):
             if t > 0 and math.hypot(o[0] + t * d[0] - cx, o[1] + t * d[1] - cy) <= r:
                 return 'propeller'
     return None
-# LiDAR: scan plane x = optical centre, beams +-15 deg along x; angle th from straight down, + to the left
-O = (LID_OPT, 0.0, LID_AX_Z)
+# LiDAR: scan plane y = optical centre (base on the left, +y), beams +-15 deg along y; angle th from straight down, + forward
+O = (LID_AX_X, LID_H / 2 - LID_OPT, LID_AX_Z)
 def clear(th):
-    return all(blocked(O, (math.sin(math.radians(f)), math.sin(math.radians(th)) * math.cos(math.radians(f)),
+    return all(blocked(O, (math.sin(math.radians(th)) * math.cos(math.radians(f)), math.sin(math.radians(f)),
                            -math.cos(math.radians(th)) * math.cos(math.radians(f)))) is None for f in (-15, -7.5, 0, 7.5, 15))
 left = next(th for th in range(0, 181) if not clear(th)) - 1
 right = next(th for th in range(0, 181) if not clear(-th)) - 1
@@ -199,7 +201,7 @@ vp.saveAsImageFile(os.path.join(OUT, 'huntsman-side-view.png'), 1600, 1000)
 em = des.exportManager
 em.execute(em.createFusionArchiveExportOptions(os.path.join(OUT, 'huntsman-full-drone.f3d'), root))
 res = {'clashes': sorted(clashes), 'total_g': round(M_tot, 1), 'cg_mm': [round(v, 1) for v in cg],
-       'lidar_clear_deg_left_right': [left, right], 'lidar_ground_strip_at_3m_m': [round(v, 2) for v in strip],
+       'lidar_clear_deg_forward_back': [left, right], 'lidar_ground_strip_at_3m_m': [round(v, 2) for v in strip],
        'lidar_ground_clearance_mm': round(LID_AX_Z - LID_D / 2 - GROUND_Z, 1),
        'camera_rays_blocked': seen, 'camera_rays': n_rays,
        'EKF2_IMU_POS': frd(fmu), 'EKF2_GPS_POS': frd(ant), 'lidar_optical_from_cg_m': frd(O), 'camera_lens_from_cg_m': frd(L)}

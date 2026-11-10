@@ -19,7 +19,7 @@ numbers.
 |---|---|---|---|
 | Pixhawk 6X Mini (FMU + baseboard) | top plate, centre (14 mm left), on its foam pads, arrow forward | 72.8 x 43.4 x 31 (spec) | **54.49** |
 | Holybro H-RTK F9P Helical (module + antenna) | GPS mast at the back right of the top plate (between arms 5 and 6), arrow forward | module **53.86** long, 35.3 wide (EST), 12.9 tall; antenna 27.5 x 59 (spec) | **57.25** |
-| Luxonis OAK-D Pro camera | cradle on the front of the landing-leg mount, 15° down | **96.96** x **29.45** x **23.15** deep (**14.28** body + fins); USB-C **9.45** behind the front face | **89.69** |
+| Luxonis OAK-D Pro camera | cradle on the front of the landing-leg mount, 10° down | **96.96** x **29.45** x **23.15** deep (**14.28** body + fins); USB-C **9.45** behind the front face | **89.69** |
 | Storm 3S 5500 mAh 11.1 V LiPo | tray in the landing-leg mount, under the battery plate | **135.41** x **43.21** x **31.11** | **361.98** |
 | Raspberry Pi 5 in its case, with active cooler | between the top and bottom plates | case not measured | **99.92** |
 | RadioLink R9DS receiver (with lead) | top plate, front right lobe (over arm 1), velcro | 43 x 24 x 15 (spec) | **12.53** |
@@ -62,9 +62,11 @@ Inserts for one drone: 8 + 2 (mount) + 2 x 3 (feet) + 4 (mast) = **20**.
 About **1885** g with the battery, guards and printed parts. The centre of mass is 1.7 mm forward of the frame
 centre and 0.8 mm to the right, which is fine; sliding the battery about 9 mm back centres it.
 
-Why the camera sits where it does: under the front gap, tilted 15° down. No arm is straight ahead. The two front
-arms, props and guards stay above the top of its view, and the skids stay outside its 72° width. It sees the ground
-from about 18 cm ahead and sits inside the guard rings if the drone hits something. The cradle holds it by its ends,
+Why the camera sits where it does: under the front gap, tilted 10° down. No arm is straight ahead. Flying forward
+tips the drone nose-down about 10°, so at 10° the camera still sees 7.5° above level; at 15° the horizon sat on the
+top edge. No arm or prop is in its view (80° x 55°, OAK-D Pro stereo). The guard edges nick the top corners, 1.9 %
+of the view: always the same close pixels, so mask them in software. The skids stay outside its width, and it sits
+inside the guard rings if the drone hits something. The cradle holds it by its ends,
 so nothing covers the lenses. A 15 mm strap under it keeps it in, and the USB-C cable goes up through a window to
 the Pi.
 
@@ -82,7 +84,7 @@ the Pi.
 | `EKF2_IMU_POS_X` / `_Y` / `_Z` | -0.002 / -0.015 / -0.066 |
 | `EKF2_GPS_POS_X` / `_Y` / `_Z` | -0.015 / 0.030 / -0.128 |
 
-The camera lens is 83 mm forward of the centre of mass and 44 mm below it (for the OAK-D's extrinsics).
+The camera lens is 82 mm forward of the centre of mass and 43 mm below it (for the OAK-D's extrinsics).
 
 ## Interference
 

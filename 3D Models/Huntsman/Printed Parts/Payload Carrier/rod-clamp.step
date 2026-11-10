@@ -10,7 +10,7 @@ FILE_DESCRIPTION(
 
 FILE_NAME(
 /* name */ 'rod-clamp.step',
-/* time_stamp */ '2026-11-09T19:12:42-04:00',
+/* time_stamp */ '2026-11-09T21:05:59-04:00',
 /* author */ (''),
 /* organization */ (''),
 /* preprocessor_version */ 'ST-DEVELOPER v20.2',
@@ -415,7 +415,7 @@ SOLID_ANGLE_UNIT()
 #363=PRODUCT_DEFINITION_SHAPE('',$,#366);
 #364=SHAPE_REPRESENTATION('',(#218),#356);
 #365=PRODUCT_DEFINITION_CONTEXT('part definition',#370,'design');
-#366=PRODUCT_DEFINITION('2026-11-09-19-12-42-363','rod clamp',#367,#365);
+#366=PRODUCT_DEFINITION('2026-11-09-21-05-59-783','rod clamp',#367,#365);
 #367=PRODUCT_DEFINITION_FORMATION('',$,#372);
 #368=PRODUCT_RELATED_PRODUCT_CATEGORY('rod clamp','rod clamp',(#372));
 #369=APPLICATION_PROTOCOL_DEFINITION('international standard',
@@ -423,7 +423,7 @@ SOLID_ANGLE_UNIT()
 #370=APPLICATION_CONTEXT(
 'Core Data for Automotive Mechanical Design Process');
 #371=PRODUCT_CONTEXT('part definition',#370,'mechanical');
-#372=PRODUCT('2026-11-09-19-12-42-363','rod clamp',$,(#371));
+#372=PRODUCT('2026-11-09-21-05-59-783','rod clamp',$,(#371));
 #373=PRESENTATION_STYLE_ASSIGNMENT((#374));
 #374=SURFACE_STYLE_USAGE(.BOTH.,#375);
 #375=SURFACE_SIDE_STYLE('',(#376));
