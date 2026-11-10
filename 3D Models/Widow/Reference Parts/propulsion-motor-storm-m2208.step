@@ -10,7 +10,7 @@ FILE_DESCRIPTION(
 
 FILE_NAME(
 /* name */ 'propulsion-motor-storm-m2208.step',
-/* time_stamp */ '2026-11-09T18:20:30-04:00',
+/* time_stamp */ '2026-11-09T20:05:22-04:00',
 /* author */ (''),
 /* organization */ (''),
 /* preprocessor_version */ 'ST-DEVELOPER v20.2',
@@ -143,7 +143,7 @@ SOLID_ANGLE_UNIT()
 #92=PRODUCT_DEFINITION_SHAPE('',$,#95);
 #93=SHAPE_REPRESENTATION('',(#55),#85);
 #94=PRODUCT_DEFINITION_CONTEXT('part definition',#99,'design');
-#95=PRODUCT_DEFINITION('2026-11-09-18-20-30-673',
+#95=PRODUCT_DEFINITION('2026-11-09-20-05-22-900',
 'propulsion motor Storm M2208 #1 [44 g]',#96,#94);
 #96=PRODUCT_DEFINITION_FORMATION('',$,#101);
 #97=PRODUCT_RELATED_PRODUCT_CATEGORY(
@@ -154,7 +154,7 @@ SOLID_ANGLE_UNIT()
 #99=APPLICATION_CONTEXT(
 'Core Data for Automotive Mechanical Design Process');
 #100=PRODUCT_CONTEXT('part definition',#99,'mechanical');
-#101=PRODUCT('2026-11-09-18-20-30-673',
+#101=PRODUCT('2026-11-09-20-05-22-900',
 'propulsion motor Storm M2208 #1 [44 g]',$,(#100));
 #102=PRESENTATION_STYLE_ASSIGNMENT((#104));
 #103=PRESENTATION_STYLE_ASSIGNMENT((#105));

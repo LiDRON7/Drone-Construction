@@ -10,7 +10,7 @@ FILE_DESCRIPTION(
 
 FILE_NAME(
 /* name */ 'landing-leg-foot.step',
-/* time_stamp */ '2026-11-09T16:58:05-04:00',
+/* time_stamp */ '2026-11-09T20:05:39-04:00',
 /* author */ (''),
 /* organization */ (''),
 /* preprocessor_version */ 'ST-DEVELOPER v20.2',
@@ -899,7 +899,7 @@ SOLID_ANGLE_UNIT()
 #830=PRODUCT_DEFINITION_SHAPE('',$,#833);
 #831=SHAPE_REPRESENTATION('',(#462),#823);
 #832=PRODUCT_DEFINITION_CONTEXT('part definition',#837,'design');
-#833=PRODUCT_DEFINITION('2026-11-09-16-58-05-117','landing leg foot',#834,
+#833=PRODUCT_DEFINITION('2026-11-09-20-05-39-650','landing leg foot',#834,
 #832);
 #834=PRODUCT_DEFINITION_FORMATION('',$,#839);
 #835=PRODUCT_RELATED_PRODUCT_CATEGORY('landing leg foot',
@@ -909,7 +909,7 @@ SOLID_ANGLE_UNIT()
 #837=APPLICATION_CONTEXT(
 'Core Data for Automotive Mechanical Design Process');
 #838=PRODUCT_CONTEXT('part definition',#837,'mechanical');
-#839=PRODUCT('2026-11-09-16-58-05-117','landing leg foot',$,(#838));
+#839=PRODUCT('2026-11-09-20-05-39-650','landing leg foot',$,(#838));
 #840=PRESENTATION_STYLE_ASSIGNMENT((#841));
 #841=SURFACE_STYLE_USAGE(.BOTH.,#842);
 #842=SURFACE_SIDE_STYLE('',(#843));

@@ -27,6 +27,11 @@ BAT_W, BAT_L, BAT_H = 43.21, 135.41, 31.11   # measured 3S 5500 mAh
 TRAY_X, NECK_X = 48.0, 22.0             # tray ends reach x = +-TRAY_X; narrow neck up to NECK_X
 RAIL_T, RAIL_H = 2.4, 12.0
 STRAP_W, STRAP_H = 22.0, 3.5            # window for a 20 mm velcro strap, one at each tray end
+# 2 orange M3 button-head screws stick out of the battery plate under the tray ends, on the centre line near each tip
+# (photo IMG_8836, scaled off the leg squares: EST). The tray face gets a pocket over each head, slotted +-SCREW_SLOT.
+SCREW_X, HEAD_D, HEAD_H, SCREW_SLOT = 46.8, 5.7, 1.65, 2.0
+POCKET_D, POCKET_H = HEAD_D + 1.5, HEAD_H + 0.7
+STRAP_XC = SCREW_X - SCREW_SLOT - POCKET_D / 2 - 1.5 - STRAP_W / 2   # strap groove centre: stops short of the pocket
 # OAK-D Pro (measured): length, height, depth with fins, body depth without fins, USB-C centre behind the front face
 CAM_L, CAM_H, CAM_D, CAM_BODY, CAM_USB = 96.96, 29.45, 23.15, 14.28, 9.45
 CAM_FIT, TILT = 0.4, 15.0               # TILT: deg down; keeps the front arm, prop and guard out of the top of the view
@@ -85,6 +90,8 @@ Ft = mv(Bk, f_, cD)                                                     # pocket
 cam_c = mv(mv(Bk, f_, cD / 2), u_, -cH / 2)                             # camera centre (print coords)
 nose_sigma = CAM_G * 9.81 * G_CRASH * (cam_c[0] - TRAY_X) / ((cL + 2 * END_T) * NOSE_T**2 / 6)
 assert SIGMA_LAYER_MPA / nose_sigma >= SF_MIN, f'camera nose stress {nose_sigma:.1f} MPa'
+assert FL_T - POCKET_H >= 2.4, 'tray floor too thin over the screw pockets'
+assert STRAP_XC - STRAP_W / 2 >= fl_x / 2 and STRAP_XC + STRAP_W / 2 <= SCREW_X - SCREW_SLOT - POCKET_D / 2 - 1.0, 'strap groove runs into the screw pocket or the leg plate'
 assert SOCK_WALL >= 2.4 and SKID_WALL >= 2.4 and BOT_WALL >= 1.2 and RAIL_T >= 1.6, 'walls under the FDM minimum'
 
 for d in [d for d in app.documents if d.name.startswith('Widow landing leg')]:
@@ -238,9 +245,17 @@ for sx in (-1, 1):
 extrude(c, sk, CUT, INSERT_L + 1.5, body=body)                          # insert holes in the face against the plate: M2.5 x 6 from above
 sk = sketch(c, 'xy', FL_T - 2)
 for sx in (-1, 1):
-    xc = sx * (NECK_X + TRAY_X) / 2
+    xc = sx * STRAP_XC
     box_xy(sk, xc - STRAP_W / 2, -fl_y, xc + STRAP_W / 2, fl_y, FL_T - 2)
 extrude(c, sk, CUT, 2 + STRAP_H, body=body)                     # strap groove under the battery + windows through both rails
+sk = sketch(c, 'xy', -1)
+for sx in (-1, 1):                                              # pockets for the orange screw heads: a slot along x
+    x0, x1, r = sx * SCREW_X - SCREW_SLOT, sx * SCREW_X + SCREW_SLOT, POCKET_D / 2
+    L, A = sk.sketchCurves.sketchLines, sk.sketchCurves.sketchArcs
+    L.addByTwoPoints(pt(sk, x0, -r, -1), pt(sk, x1, -r, -1)); L.addByTwoPoints(pt(sk, x0, r, -1), pt(sk, x1, r, -1))
+    A.addByThreePoints(pt(sk, x1, -r, -1), pt(sk, x1 + r, 0, -1), pt(sk, x1, r, -1))
+    A.addByThreePoints(pt(sk, x0, -r, -1), pt(sk, x0 - r, 0, -1), pt(sk, x0, r, -1))
+extrude(c, sk, CUT, POCKET_H + 1, body=body)
 mount = body; mount.name = 'landing leg mount'
 
 # ---- foot T (print coords: skid axis along x at z = 0, flat bottom on the bed, socket straight up)

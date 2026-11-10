@@ -10,7 +10,7 @@ FILE_DESCRIPTION(
 
 FILE_NAME(
 /* name */ 'flight-controller-pixhawk-6x-mini-fmu.step',
-/* time_stamp */ '2026-11-09T18:20:30-04:00',
+/* time_stamp */ '2026-11-09T20:05:23-04:00',
 /* author */ (''),
 /* organization */ (''),
 /* preprocessor_version */ 'ST-DEVELOPER v20.2',
@@ -240,7 +240,7 @@ SOLID_ANGLE_UNIT()
 #189=PRODUCT_DEFINITION_SHAPE('',$,#192);
 #190=SHAPE_REPRESENTATION('',(#120),#182);
 #191=PRODUCT_DEFINITION_CONTEXT('part definition',#196,'design');
-#192=PRODUCT_DEFINITION('2026-11-09-18-20-30-902',
+#192=PRODUCT_DEFINITION('2026-11-09-20-05-23-123',
 'flight controller Pixhawk 6X Mini FMU [23 g]',#193,#191);
 #193=PRODUCT_DEFINITION_FORMATION('',$,#198);
 #194=PRODUCT_RELATED_PRODUCT_CATEGORY(
@@ -251,7 +251,7 @@ SOLID_ANGLE_UNIT()
 #196=APPLICATION_CONTEXT(
 'Core Data for Automotive Mechanical Design Process');
 #197=PRODUCT_CONTEXT('part definition',#196,'mechanical');
-#198=PRODUCT('2026-11-09-18-20-30-902',
+#198=PRODUCT('2026-11-09-20-05-23-123',
 'flight controller Pixhawk 6X Mini FMU [23 g]',$,(#197));
 #199=PRESENTATION_STYLE_ASSIGNMENT((#201));
 #200=PRESENTATION_STYLE_ASSIGNMENT((#202));
