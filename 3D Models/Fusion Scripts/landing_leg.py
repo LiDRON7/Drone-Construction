@@ -24,19 +24,20 @@ HOLE_X, HOLE_Y = 24.62, (35.77**2 - 24.62**2) ** 0.5
 FL_T, FL_EDGE, FL_CHAMF = 6.0, 5.0, 2.5
 GUS_R, GUS_H = 15.0, 5.0                # gusset cone where each socket meets the plate
 BAT_W, BAT_L, BAT_H = 43.21, 135.41, 31.11   # measured 3S 5500 mAh
-TRAY_X, NECK_X = 48.0, 22.0             # tray ends reach x = +-TRAY_X; narrow neck up to NECK_X
+TRAY_X, NECK_X = 48.0, 16.0             # tray ends reach x = +-TRAY_X; narrow neck up to NECK_X (rails long enough for closed strap windows)
 RAIL_T, RAIL_H = 2.4, 12.0
-STRAP_W, STRAP_H = 22.0, 3.5            # window for a 20 mm velcro strap, one at each tray end
+STRAP_W, STRAP_H = 22.0, 3.5            # window for a 20 mm velcro strap through both rails, one at each tray end
+STRAP_X0 = NECK_X + 3.0                 # window starts 3 mm in from the rail's inner end: a closed slot, not a hook
 # 2 orange M3 button-head screws stick out of the battery plate under the tray ends, on the centre line near each tip
 # (photo IMG_8836, scaled off the leg squares: EST). The tray face gets a pocket over each head, slotted +-SCREW_SLOT.
 SCREW_X, HEAD_D, HEAD_H, SCREW_SLOT = 46.8, 5.7, 1.65, 2.0
+POCKET_FWD = 10.0                       # the front (camera-end) pocket reaches this much further toward the camera (test fit 2026-11-10)
 POCKET_D, POCKET_H = HEAD_D + 1.5, HEAD_H + 0.7
-STRAP_XC = SCREW_X - SCREW_SLOT - POCKET_D / 2 - 1.5 - STRAP_W / 2   # strap groove centre: stops short of the pocket
 # OAK-D Pro (measured): length, height, depth with fins, body depth without fins, USB-C centre behind the front face
-CAM_L, CAM_H, CAM_D, CAM_BODY, CAM_USB = 96.96, 29.45, 23.15, 14.28, 9.45
-CAM_FIT, TILT = 0.4, 10.0               # TILT: deg down. 10: sees 7.5 deg above level in forward flight; guard edges nick the top corners (1.4 %)
+CAM_L, CAM_H, CAM_D, CAM_BODY, CAM_USB = 96.96, 29.45, 23.15, 15.33, 9.45   # CAM_BODY re-measured 2026-11-10 (was 14.28: too tight)
+CAM_FIT, TILT = 0.8, 10.0               # TILT: deg down. 10: sees 7.5 deg above level in forward flight; guard edges nick the top corners (1.4 %)
 CAM_BACK_X = 58.0                       # camera's lowest back corner; the battery's front end is at 54.7 (BATT_X in full_drone.py)
-NOSE_T, END_T, END_BLOCK = 4.0, 3.0, 16.0   # plate over the camera, end plates, blocks between plate and camera top at each end
+NOSE_T, END_T, END_BLOCK = 5.0, 3.0, 16.0   # plate over the camera, end plates, blocks between plate and camera top at each end
 LIP, LIP_T, LENS_EDGE = 3.5, 2.0, 8.0   # front/back lips over the camera's ends; outer lens edge 8 mm from the end (photo, EST)
 CAM_STRAP_W, CAM_STRAP_T = 17.0, 3.5    # slot in each end plate for a 15 mm velcro strap under the camera
 CAM_G, G_CRASH = 0.0897, 20.0           # kg measured; sideways crash load on the nose
@@ -91,7 +92,8 @@ cam_c = mv(mv(Bk, f_, cD / 2), u_, -cH / 2)                             # camera
 nose_sigma = CAM_G * 9.81 * G_CRASH * (cam_c[0] - TRAY_X) / ((cL + 2 * END_T) * NOSE_T**2 / 6)
 assert SIGMA_LAYER_MPA / nose_sigma >= SF_MIN, f'camera nose stress {nose_sigma:.1f} MPa'
 assert FL_T - POCKET_H >= 2.4, 'tray floor too thin over the screw pockets'
-assert STRAP_XC - STRAP_W / 2 >= fl_x / 2 and STRAP_XC + STRAP_W / 2 <= SCREW_X - SCREW_SLOT - POCKET_D / 2 - 1.0, 'strap groove runs into the screw pocket or the leg plate'
+assert STRAP_X0 + STRAP_W <= TRAY_X - 3, 'strap window does not fit inside the rail: it would open into a hook'
+assert NOSE_T - POCKET_H >= 2.4, 'nose plate too thin over the front screw pocket'
 assert SOCK_WALL >= 2.4 and SKID_WALL >= 2.4 and BOT_WALL >= 1.2 and RAIL_T >= 1.6, 'walls under the FDM minimum'
 
 for d in [d for d in app.documents if d.name.startswith('Widow landing leg')]:
@@ -153,7 +155,7 @@ def cone(comp, z0, r0, z1, r1, body, y0=0.0, y1=0.0):
     li.isSolid = True
     if body:
         li.participantBodies = [body]
-    comp.features.loftFeatures.add(li)
+    return comp.features.loftFeatures.add(li).bodies.item(0)
 
 def combine(comp, target, tools, op):
     coll = adsk.core.ObjectCollection.create()
@@ -179,7 +181,8 @@ def hexagon(sk, cx, cy, z, af):
 
 def leaning_socket(comp, body, py, pz, side, s0, embed, lean=LEAN):
     # socket on an axis through (0, py, pz) leaning lean deg toward side*y; tube floor s0 up the axis.
-    # Built upright at the origin, then tilted and moved; merge() joins the socket, cut_all() cuts the bore and cross hole.
+    # Built upright at the origin, then tilted and moved. Returns (socket, cutters): the caller joins the socket and
+    # cuts with the cutters explicitly (a 2026-11-09 print showed name-based cutting left the cross hole as solid pegs).
     sock = extrude(comp, circle(sketch(comp, 'xy', -embed), (0, 0, -embed), sock_od), NEW, embed + s0 + SOCK_D).bodies.item(0)
     hole = extrude(comp, circle(sketch(comp, 'xy', s0), (0, 0, s0), bore), NEW, SOCK_D + 1).bodies.item(0)
     cross = extrude(comp, circle(sketch(comp, 'yz'), (0, 0, s0 + SOCK_D / 2), CROSS_D), NEW, sym=sock_od + 2).bodies.item(0)
@@ -191,9 +194,9 @@ def leaning_socket(comp, body, py, pz, side, s0, embed, lean=LEAN):
     coll = adsk.core.ObjectCollection.create()
     for b in (sock, hole, cross, ins):
         coll.add(b)
-    hole.name = cross.name = ins.name = 'cutter'
     mi = comp.features.moveFeatures.createInput2(coll); mi.defineAsFreeMove(m)
     comp.features.moveFeatures.add(mi)
+    return sock, [hole, cross, ins]
 
 # ---- mount (print coords: face against the drone's bottom plate on the bed, sockets and tray up; y across the drone)
 mount_occ = part('landing leg mount'); c = mount_occ.component
@@ -211,9 +214,10 @@ for sx in (-1, 1):
         box_xy(sk, sx * NECK_X, sy * rail_in, sx * TRAY_X, sy * (rail_in + RAIL_T), FL_T)
 extrude(c, sk, JOIN, RAIL_H, body=body)                                                                   # side rails
 for side in (-1, 1):
-    leaning_socket(c, body, side * LEG_Y, FL_T, side, 0.0, 1.0)
-    cone(c, FL_T, GUS_R, FL_T + GUS_H, sock_od / 2 - 0.2, None, side * LEG_Y, side * (LEG_Y + GUS_H * ta))
-    body = cut_all(c)                                                                                     # one side at a time
+    sock, cutters = leaning_socket(c, body, side * LEG_Y, FL_T, side, 0.0, 1.0)
+    gus = cone(c, FL_T, GUS_R, FL_T + GUS_H, sock_od / 2 - 0.2, None, side * LEG_Y, side * (LEG_Y + GUS_H * ta))
+    combine(c, body, [sock, gus], JOIN)
+    combine(c, body, cutters, CUT)                                                                        # bore, cross hole, insert
 def slab(pts, w_out, w_in=0.0):  # x-z profile (print coords) extruded over w_in <= |y| <= w_out
     xz = lambda: poly(sketch(c, 'xz'), [(x, 0, z) for x, z in pts])
     b = extrude(c, xz(), NEW, sym=2 * w_out).bodies.item(0)
@@ -243,14 +247,14 @@ for sx in (-1, 1):
         for side in (-1, 1):
             circle(sk, (sx * HOLE_X / 2, side * LEG_Y + sy * HOLE_Y / 2, -1), INSERT_D)
 extrude(c, sk, CUT, INSERT_L + 1.5, body=body)                          # insert holes in the face against the plate: M2.5 x 6 from above
-sk = sketch(c, 'xy', FL_T - 2)
+sk = sketch(c, 'xy', FL_T)
 for sx in (-1, 1):
-    xc = sx * STRAP_XC
-    box_xy(sk, xc - STRAP_W / 2, -fl_y, xc + STRAP_W / 2, fl_y, FL_T - 2)
-extrude(c, sk, CUT, 2 + STRAP_H, body=body)                     # strap groove under the battery + windows through both rails
+    x0, x1 = sorted((sx * STRAP_X0, sx * (STRAP_X0 + STRAP_W)))
+    box_xy(sk, x0, -fl_y, x1, fl_y, FL_T)
+extrude(c, sk, CUT, STRAP_H, body=body)                         # closed strap windows through both rails, flush with the floor
 sk = sketch(c, 'xy', -1)
 for sx in (-1, 1):                                              # pockets for the orange screw heads: a slot along x
-    x0, x1, r = sx * SCREW_X - SCREW_SLOT, sx * SCREW_X + SCREW_SLOT, POCKET_D / 2
+    x0, x1, r = sx * SCREW_X - SCREW_SLOT, sx * SCREW_X + SCREW_SLOT + (POCKET_FWD if sx > 0 else 0.0), POCKET_D / 2
     L, A = sk.sketchCurves.sketchLines, sk.sketchCurves.sketchArcs
     L.addByTwoPoints(pt(sk, x0, -r, -1), pt(sk, x1, -r, -1)); L.addByTwoPoints(pt(sk, x0, r, -1), pt(sk, x1, r, -1))
     A.addByThreePoints(pt(sk, x1, -r, -1), pt(sk, x1 + r, 0, -1), pt(sk, x1, r, -1))
@@ -263,8 +267,9 @@ foot_occ = part('landing leg foot'); c = foot_occ.component
 w, d45 = foot_w, foot_w - BOT_HW
 body = extrude(c, poly(sketch(c, 'yz'), [(0, -BOT_HW, -bot), (0, BOT_HW, -bot), (0, w, -bot + d45), (0, w, zb),
                                          (0, -w, zb), (0, -w, -bot + d45)]), NEW, sym=FOOT_L).bodies.item(0)  # 45 deg sides: foam lands first
-leaning_socket(c, body, 0.0, zb, 1, FOOT_S0, 3.0, lean=0.0)
-body = cut_all(c)
+sock, cutters = leaning_socket(c, body, 0.0, zb, 1, FOOT_S0, 3.0, lean=0.0)
+combine(c, body, [sock], JOIN)
+combine(c, body, cutters, CUT)
 extrude(c, circle(sketch(c, 'yz'), (0, 0, 0), skid_bore), CUT, sym=FOOT_L + 2, body=body)
 q, wt = r_s / math.sqrt(2), r_s * math.sqrt(2) - tear_top
 extrude(c, poly(sketch(c, 'yz'), [(0, -q, q), (0, q, q), (0, wt, tear_top), (0, -wt, tear_top)]), CUT, sym=FOOT_L + 2, body=body)

@@ -10,7 +10,7 @@ FILE_DESCRIPTION(
 
 FILE_NAME(
 /* name */ 'frame-battery-plate.step',
-/* time_stamp */ '2026-11-09T21:07:05-04:00',
+/* time_stamp */ '2026-11-10T10:27:49-04:00',
 /* author */ (''),
 /* organization */ (''),
 /* preprocessor_version */ 'ST-DEVELOPER v20.2',
@@ -306,7 +306,7 @@ SOLID_ANGLE_UNIT()
 #255=PRODUCT_DEFINITION_SHAPE('',$,#258);
 #256=SHAPE_REPRESENTATION('',(#162),#248);
 #257=PRODUCT_DEFINITION_CONTEXT('part definition',#262,'design');
-#258=PRODUCT_DEFINITION('2026-11-09-21-07-05-962',
+#258=PRODUCT_DEFINITION('2026-11-10-10-27-49-133',
 'frame battery plate [15 g]',#259,#257);
 #259=PRODUCT_DEFINITION_FORMATION('',$,#264);
 #260=PRODUCT_RELATED_PRODUCT_CATEGORY('frame battery plate [15 g]',
@@ -316,7 +316,7 @@ SOLID_ANGLE_UNIT()
 #262=APPLICATION_CONTEXT(
 'Core Data for Automotive Mechanical Design Process');
 #263=PRODUCT_CONTEXT('part definition',#262,'mechanical');
-#264=PRODUCT('2026-11-09-21-07-05-962','frame battery plate [15 g]',$,(#263));
+#264=PRODUCT('2026-11-10-10-27-49-133','frame battery plate [15 g]',$,(#263));
 #265=PRESENTATION_STYLE_ASSIGNMENT((#267));
 #266=PRESENTATION_STYLE_ASSIGNMENT((#268));
 #267=SURFACE_STYLE_USAGE(.BOTH.,#269);

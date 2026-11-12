@@ -113,7 +113,7 @@ add('power module Holybro PM02D', 'box', (20, 16, 10), (0, -40, PLATE_T + 5), 20
 add('misc wiring bundle (placeholder)', 'box', (60, 60, 5), (0, 0, TOP_Z - 3.5), 50)                  # EST
 # under the battery plate: battery strapped in the leg mount's tray, OAK-D Pro in the cradle on the mount's front
 # (landing_leg.py), facing the front (between the two front arms) and TILT deg down. The Pixhawk and GPS arrows point this way too.
-CAM_C, CAM_LENS, TILT = (72.19, 20.74), (83.78, 22.79), 10.0   # cam_centre_print_mm, cam_lens_print_mm, TILT in landing_leg.py
+CAM_C, CAM_LENS, TILT = (72.42, 21.97), (84.21, 24.05), 10.0   # cam_centre_print_mm, cam_lens_print_mm, TILT in landing_leg.py
 CAM_BACK_X = 58.0                                               # CAM_BACK_X in landing_leg.py
 ct, st = math.cos(math.radians(TILT)), math.sin(math.radians(TILT))
 cam_at = lambda k: (CAM_C[0] + k*ct, 0, BP_Z - CAM_C[1] - k*st)   # k mm forward along the camera axis from the pocket centre
