@@ -349,6 +349,18 @@ on_bottom = [p for p in PARTS if p[1] == 'box' and (abs(p[3][2] - p[2][2]/2 - PL
 on_battery_plate = [('landing leg mount plate', 'box', (34.6, 2*LEG_Y + 36, 6), (0, 0, BP_Z - 3), 0)]
 off_bp = sorted({p[0] for p in on_battery_plate for sx in (-1, 1) for sy in (-1, 1)
                  if not inside((p[3][0] + sx*p[2][0]/2, p[3][1] + sy*p[2][1]/2), bp_pts)})
-{'camera_view_blocked_pct': CAM_BLOCKED_PCT, 'off_bottom_plate': off(on_bottom), 'off_battery_plate': off_bp, 'clashes': clashes, 'total_g': round(pp.mass*1000, 1), 'table_total_g': tm,
+# for the simulator (Simulation/tools/cad_to_sdf.py): every weight and where it sits, the rotors, sensors and skids
+# (mm, this file's frame; skids as boxes x0, y0, z0, x1, y1, z1)
+skid_y, skid_z = LEG_Y + (TUBE_L + FOOT_FLOOR)*sa, BP_Z - FL_T - (TUBE_L + FOOT_FLOOR)*ca
+sim = {'items': [[p[0], p[4], list(p[3]), 0] for p in PARTS],
+       'rotors': [[R_MOTOR*math.cos(math.radians(ARM0 + 60*i)), R_MOTOR*math.sin(math.radians(ARM0 + 60*i)),
+                   ARM_TOP + (2.0 if WITH_GUARDS else 0.0) + 20 + CAP_T + 3.5] for i in range(6)], 'prop_d': 203.0,
+       'imu': [0, 14, FC_Z + 6 + 14.2 + 8.4], 'gps': [SQ_X, SQ_Y, GPS_Z + 12.9 + 29.5],
+       'camera': [lx, 0.0, lz], 'camera_tilt_deg': TILT, 'lidar': None,
+       'skids': [[-110, s*skid_y - 9, skid_z - 9, 110, s*skid_y + 9, skid_z + 9] for s in (1, -1)]}
+res = {'camera_view_blocked_pct': CAM_BLOCKED_PCT, 'off_bottom_plate': off(on_bottom), 'off_battery_plate': off_bp, 'clashes': clashes, 'total_g': round(pp.mass*1000, 1), 'table_total_g': tm,
  'cg_mm': [round(pp.centerOfMass.x*10, 1), round(pp.centerOfMass.y*10, 1), round(pp.centerOfMass.z*10, 1)],
- 'mass_mismatches': bad_mass, 'position_mismatches': bad_pos[:5], 'n_bad_pos': len(bad_pos), 'parts': len(PARTS), 'part_files': len(done)}
+ 'mass_mismatches': bad_mass, 'position_mismatches': bad_pos[:5], 'n_bad_pos': len(bad_pos), 'parts': len(PARTS), 'part_files': len(done), 'sim': sim}
+import json
+open(os.path.join(OUT, 'widow-checks.json'), 'w').write(json.dumps(res, indent=1))
+res
