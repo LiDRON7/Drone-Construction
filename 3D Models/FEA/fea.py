@@ -40,7 +40,7 @@ PARTS = {
         step=os.path.join(HERE, '..', 'Widow', 'Printed Parts', 'Propeller Guard', 'propeller-guard.step'), keep='all',
         h=(0.7, 2.5), E=1500.0, nu=0.38, rho=1.27e-6, strength=30.0, material='PETG (XY, conservative)',
         held=lambda x: (np.hypot(x[0], x[1]) <= 13.0) & (x[2] <= 2.1),
-        r_in=108.0, ring_t=2.0, band=(16.0, 28.0), tip_gap=6.4, auw=1.885, between=32.5),
+        r_in=108.0, ring_t=1.7, band=(20.0, 30.0), tip_gap=6.4, auw=1.885, between=32.5),
     'carrier': dict(  # huntsman_payload.py, print coords: plate top (rod side) on z = 0, +z = down in flight
         step=os.path.join(HUNT, 'Payload Carrier', 'payload-carrier.step'), keep='max_x', h=(1.0, 4.0),
         E=4000.0, nu=0.35, rho=1.2e-6, strength=25.0, material='PAHT-CF (across layers, conservative)',

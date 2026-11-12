@@ -50,21 +50,38 @@ change `INSERT_D`/`INSERT_L` in the scripts if yours differ).
 
 | Part | Weight | Holds | Fixed by |
 |---|---|---|---|
-| Propeller guard (x6) | 32.0 each | one prop each | the motor screws (no insert: they go into the motor) |
+| Propeller guard (x6) | 33.7 each | one prop each | the motor screws (no insert: they go into the motor) |
 | GPS mast | 38.1 | GPS module | 4 x M2.5 x 6 from under the top plate, through it, into 4 inserts in the foot |
 | Landing-leg mount | 79.2 | both legs, the battery and the OAK-D Pro | 8 x M2.5 x 6 from above the battery plate into 8 inserts; 2 x M2.5 x 25 cross bolts into 2 inserts |
 | Landing-leg foot (x2) | 22.4 each | skid tube | M2.5 x 25 cross bolt into 1 insert; 2 x M2.5 x 6 grub screws in 2 inserts |
 
 Inserts for one drone: 8 + 2 (mount) + 2 x 3 (feet) + 4 (mast) = **20**.
 
+**Propeller guards** are the same style as Huntsman's: a 2 mm hub under the motor, four T-section struts with wide
+roots, and a ring with a solid band at the prop tips, a lip round its top edge, a diagonal lattice below and a fin at
+each strut end. One piece, 1 h 26 min, PETG, 3 walls 15 % infill (`propeller-guard.gcode.3mf`). FEA (`FEA/fea.py
+widow_guard`, results in `FEA/`) against the old solid-ring guard, same loads:
+
+| Load on one guard | New: ring moves toward prop | New: peak stress | Old: ring moves toward prop | Old: peak stress |
+|---|---|---|---|---|
+| 1 kg hand push at the outer point | 2.9 mm | 18 MPa | 4.1 mm | 31 MPa |
+| 1 g (1.9 kg) bump at the outer point | 5.5 mm | 34 MPa | 7.8 mm | 58 MPa |
+| 1 g bump from the side | 3.3 mm | 32 MPa | 6.2 mm | 122 MPa |
+| 1 g bump between struts | 7.1 mm | 45 MPa | 15.6 mm | 72 MPa |
+| lifted by the ring, 1 kg | 6.8 mm | 75 MPa | 12.7 mm | 146 MPa |
+
+The tip gap is 6.4 mm, so a full-weight hit at the outer point now stays clear of the prop (the old one reached it).
+PETG is good for about 30 MPa, so the 1 g bumps sit right at its limit: it bends there, it doesn't shatter. Don't
+lift the drone by the guards. 1.7 g heavier per guard than the old one.
+
 ## Whole drone
 
-About **1885** g with the battery, guards and printed parts. The centre of mass is 1.7 mm forward of the frame
+About **1886** g with the battery, guards and printed parts. The centre of mass is 1.6 mm forward of the frame
 centre and 0.8 mm to the right, which is fine; sliding the battery about 9 mm back centres it.
 
 Why the camera sits where it does: under the front gap, tilted 10° down. No arm is straight ahead. Flying forward
 tips the drone nose-down about 10°, so at 10° the camera still sees 7.5° above level; at 15° the horizon sat on the
-top edge. No arm or prop is in its view (80° x 55°, OAK-D Pro stereo). The guard edges nick the top corners, 1.9 %
+top edge. No arm or prop is in its view (80° x 55°, OAK-D Pro stereo). The guard edges nick the top corners, 1.6 %
 of the view: always the same close pixels, so mask them in software. The skids stay outside its width, and it sits
 inside the guard rings if the drone hits something. The cradle holds it by its ends,
 so nothing covers the lenses. A 15 mm strap under it keeps it in, and the USB-C cable goes up through a window to
