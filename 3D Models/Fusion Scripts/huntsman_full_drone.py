@@ -228,6 +228,14 @@ res = {'clashes': sorted(clashes), 'total_g': round(M_tot, 1), 'cg_mm': [round(v
        'lidar_ground_clearance_mm': round(LID_AX_Z - LID_D / 2 - GROUND_Z, 1),
        'camera_rays_blocked': seen, 'camera_rays': n_rays,
        'EKF2_IMU_POS': frd(fmu), 'EKF2_GPS_POS': frd(ant), 'lidar_optical_from_cg_m': frd(O), 'camera_lens_from_cg_m': frd(L)}
+# for the simulator (Simulation/tools/cad_to_sdf.py): every weight and where it sits, the rotors, sensors and skids
+# (mm, this file's frame; skids as boxes). RING = how far out each spread weight sits (EST), for the inertia.
+RING = {'printed propeller guards x6': 400, 'frame Tarot 680 PRO with landing gear (EST)': 200, 'motors Tarot 4108 380KV x6': ARM_R,
+        'ESC Aikon AK8 80A x6 (EST)': ESC_R, 'props 1355 x6 (EST)': ARM_R, 'wiring (EST)': 80, 'printed ESC covers x6': ESC_R, 'printed motor caps x6': ARM_R}
+res['sim'] = {'items': [[n, g, [round(v, 1) for v in c], RING.get(n, 0)] for n, g, c in items],
+              'rotors': [[ARM_R * math.cos(math.radians(a)), ARM_R * math.sin(math.radians(a)), (props[0][2] + props[0][5]) / 2] for a in ARM_ANGS], 'prop_d': 344.0,
+              'imu': list(fmu), 'gps': list(ant), 'camera': list(L), 'camera_tilt_deg': TILT, 'lidar': list(O),
+              'skids': [[round(v, 1) for v in aabb(o)] for o in leaves if o.boundingBox.minPoint.z * 10 < GROUND_Z + 15]}
 import json
 open(os.path.join(OUT, 'huntsman-checks.json'), 'w').write(json.dumps(res, indent=1))
 res
