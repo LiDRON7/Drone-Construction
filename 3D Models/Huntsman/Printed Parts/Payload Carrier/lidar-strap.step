@@ -10,7 +10,7 @@ FILE_DESCRIPTION(
 
 FILE_NAME(
 /* name */ 'lidar-strap.step',
-/* time_stamp */ '2026-11-09T21:05:59-04:00',
+/* time_stamp */ '2026-11-10T16:47:22-04:00',
 /* author */ (''),
 /* organization */ (''),
 /* preprocessor_version */ 'ST-DEVELOPER v20.2',
@@ -580,7 +580,7 @@ SOLID_ANGLE_UNIT()
 #523=PRODUCT_DEFINITION_SHAPE('',$,#526);
 #524=SHAPE_REPRESENTATION('',(#310),#516);
 #525=PRODUCT_DEFINITION_CONTEXT('part definition',#530,'design');
-#526=PRODUCT_DEFINITION('2026-11-09-21-05-59-826','lidar strap',#527,#525);
+#526=PRODUCT_DEFINITION('2026-11-10-16-47-22-452','lidar strap',#527,#525);
 #527=PRODUCT_DEFINITION_FORMATION('',$,#532);
 #528=PRODUCT_RELATED_PRODUCT_CATEGORY('lidar strap','lidar strap',(#532));
 #529=APPLICATION_PROTOCOL_DEFINITION('international standard',
@@ -588,7 +588,7 @@ SOLID_ANGLE_UNIT()
 #530=APPLICATION_CONTEXT(
 'Core Data for Automotive Mechanical Design Process');
 #531=PRODUCT_CONTEXT('part definition',#530,'mechanical');
-#532=PRODUCT('2026-11-09-21-05-59-826','lidar strap',$,(#531));
+#532=PRODUCT('2026-11-10-16-47-22-452','lidar strap',$,(#531));
 #533=PRESENTATION_STYLE_ASSIGNMENT((#534));
 #534=SURFACE_STYLE_USAGE(.BOTH.,#535);
 #535=SURFACE_SIDE_STYLE('',(#536));

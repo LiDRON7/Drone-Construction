@@ -10,7 +10,7 @@ FILE_DESCRIPTION(
 
 FILE_NAME(
 /* name */ 'frame-bottom-plate.step',
-/* time_stamp */ '2026-11-09T21:07:05-04:00',
+/* time_stamp */ '2026-11-10T10:27:49-04:00',
 /* author */ (''),
 /* organization */ (''),
 /* preprocessor_version */ 'ST-DEVELOPER v20.2',
@@ -705,7 +705,7 @@ SOLID_ANGLE_UNIT()
 #651=PRODUCT_DEFINITION_SHAPE('',$,#654);
 #652=SHAPE_REPRESENTATION('',(#414),#644);
 #653=PRODUCT_DEFINITION_CONTEXT('part definition',#658,'design');
-#654=PRODUCT_DEFINITION('2026-11-09-21-07-05-900',
+#654=PRODUCT_DEFINITION('2026-11-10-10-27-49-087',
 'frame bottom plate [45 g]',#655,#653);
 #655=PRODUCT_DEFINITION_FORMATION('',$,#660);
 #656=PRODUCT_RELATED_PRODUCT_CATEGORY('frame bottom plate [45 g]',
@@ -715,7 +715,7 @@ SOLID_ANGLE_UNIT()
 #658=APPLICATION_CONTEXT(
 'Core Data for Automotive Mechanical Design Process');
 #659=PRODUCT_CONTEXT('part definition',#658,'mechanical');
-#660=PRODUCT('2026-11-09-21-07-05-900','frame bottom plate [45 g]',$,(#659));
+#660=PRODUCT('2026-11-10-10-27-49-087','frame bottom plate [45 g]',$,(#659));
 #661=PRESENTATION_STYLE_ASSIGNMENT((#663));
 #662=PRESENTATION_STYLE_ASSIGNMENT((#664));
 #663=SURFACE_STYLE_USAGE(.BOTH.,#665);

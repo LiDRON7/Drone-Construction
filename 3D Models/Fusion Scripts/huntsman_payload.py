@@ -13,6 +13,8 @@
 #                down and back at the same angle.
 #   battery    - 6S 5200 across the drone behind the wall, 2 x 20 mm straps through the plate
 #   interface box (under the plate, velcro) and the 12 V step-down for the LiDAR (on top of the plate, between the rods)
+# At 271 mm the plate is too long for the X2D's 256 mm bed, so it is cut across behind the battery (SPLIT_X) into the
+# carrier and a separate interface-box plate. Each rides on the rods on its own clamps, so they need no joint.
 # Print coords: the plate's top (the rod side) on the bed, everything else grows up (= down in flight). x forward.
 # Flight coords = (x, -y, Z_PT - z). All mm. Frame numbers come from the online Tarot 680 PRO model (EST: measure
 # the real rods); LiDAR numbers from Velodyne's datasheet; battery from the PowerHobby listing.
@@ -36,13 +38,20 @@ BAT_X0 = -24.0                              # battery front face (x)
 RAIL_T, RAIL_H, RAIL_HW = 2.4, 12.0, 36.0
 STRAP_W, STRAP_T, STRAP_Y = 22.0, 3.5, 53.0  # 20 mm velcro straps, centred this far off the centre line
 # plate outline: front part (LiDAR + camera), battery wings, back part (interface box)
-PL_X_BACK, WING_X, WING_HW, FRONT_HW, BACK_HW = -134.0, (-17.0, -78.0), 66.0, 56.0, 40.0
+PL_X_BACK, WING_X, WING_HW, FRONT_HW, BACK_HW = -134.0, (-17.0, -76.0), 66.0, 56.0, 40.0
+SPLIT_X, SPLIT_GAP = -76.5, 1.0                # cut between the carrier and the interface-box plate
+BED, BED_MARGIN = 256.0, 3.0                   # Bambu Lab X2D bed (main nozzle); room for a 3 mm brim
 IFB = (75.0, 53.0, 28.0)                    # EST: Velodyne interface box (y, x, z): measure it
 CLAMP_X = (-112.0, -40.0, 56.0)             # clamps on each rod, clear of the dampers (x 66-80) and the cable slot
-CL_L, CL_IN, CL_OUT, CL_TOP = 20.0, 3.0, 5.5, 2.5   # clamp length, wall toward the centre, outer wall (grub insert), over the rod
+CL_L, CL_IN, CL_OUT, CL_TOP = 20.0, 7.5, 5.5, 2.5   # clamp length, wall toward the centre (pinch screw), outer wall, over the rod
+# Each clamp pinches its rod (a grub screw on the carbon rod would crush it): the inner wall is slit at the rod axis and
+# 1 x M2.5 x PINCH_LEN comes up through a hole in the carrier, sits in a pocket in the lower jaw, crosses the slit and
+# screws into an insert pressed into the clamp's top. Tighten from under the carrier with everything fitted.
+SLIT, PINCH_LEN, PINCH_HEAD = 1.0, 16.0, 5.2   # slit width; screw length; pocket for its head (4.5 mm socket head)
+LANYARD_X, LANYARD_Y, LANYARD_D = -16.0, 9.0, 4.5   # 2 holes for a safety cord to the frame, near the payload's centre of mass
 # OAK-D Pro cradle: identical numbers to Widow's landing_leg.py
-CAM_L, CAM_H, CAM_D, CAM_BODY, CAM_USB = 96.96, 29.45, 23.15, 14.28, 9.45
-CAM_FIT, TILT = 0.4, 10.0                   # deg down: 10 sees above level in forward flight; props/guards take ~9 % (top corners, mask them)
+CAM_L, CAM_H, CAM_D, CAM_BODY, CAM_USB = 96.96, 29.45, 23.15, 15.33, 9.45   # CAM_BODY re-measured 2026-11-10
+CAM_FIT, TILT = 0.8, 10.0                   # deg down: 10 sees above level in forward flight; props/guards take ~9 % (top corners, mask them)
 R_L = LID_D / 2 + 0.15                      # strap/saddle bore
 CAM_BACK_X = LID_X0 + LID_D / 2 + R_L + EAR + 3.5   # camera's lowest back corner: just ahead of the strap saddle
 NOSE_T, END_T, END_BLOCK = PL_T, 3.0, 16.0
@@ -69,7 +78,13 @@ assert Z_PT < DAMP_Z - 1.5 and Z_PT < ROD_Z - ROD_D / 2 - 1.5, 'plate runs into 
 assert ROD_Z + ROD_D / 2 + CL_TOP <= -25.2 - 1.5, 'clamps hit the bottom plate (its underside is at -25.2)'
 assert all(abs(abs(x) - 73) > CL_L / 2 + 6 for x in CLAMP_X), 'a clamp sits on a damper'
 assert bore_z - (ROD_D + FIT) / 2 >= INSERT_L + 1.5, 'clamp inserts run into the rod bore'
-assert CL_OUT >= INSERT_L + 0.8, 'grub screw insert does not fit in the clamp wall'
+pinch_y = (ROD_D + FIT) / 2 + CL_IN / 2        # pinch screw off the rod axis, toward the centre
+pinch_seat = cl_h - PINCH_LEN                  # its head sits this high in the lower jaw: tip flush with the clamp top
+assert pinch_y - INSERT_D / 2 - (ROD_D + FIT) / 2 >= 1.5 and (ROD_D + FIT) / 2 + CL_IN - pinch_y - PINCH_HEAD / 2 >= 1.0, 'pinch screw: walls too thin'
+assert cl_h - (bore_z + SLIT / 2) >= INSERT_L + 1 and 2.0 <= pinch_seat <= bore_z - SLIT / 2 - 4, 'pinch screw: jaws too thin for the insert or the head'
+assert PINCH_LEN - (cl_h - INSERT_L - pinch_seat) >= 3, 'pinch screw: under 3 mm in the insert'
+assert abs(LANYARD_X - BAT_X0) >= RAIL_T + LANYARD_D / 2 + 2 and abs(LANYARD_X - LID_X0) >= LANYARD_D / 2 + 2, 'lanyard holes hit the battery rail or the LiDAR'
+assert ROD_Y - (ROD_D + FIT) / 2 - CL_IN - LANYARD_Y - LANYARD_D / 2 >= 2, 'lanyard holes under the clamps'
 assert WALL_HW >= pin_d[0] + PIN_HOLE / 2 + 4, 'pin holes too close to the wall edge'
 assert x_c - R_L - EAR >= BAT_X0 + RAIL_T + 1, 'LiDAR strap saddle runs into the battery rail'
 assert LID_X0 >= BAT_X0 + 3.5 + 2 and x_c - WALL_HW >= BAT_X0 + 3.5 + 1, 'LiDAR or its wall runs into the battery strap'
@@ -79,7 +94,9 @@ assert EAR >= INSERT_D + 2 * 2.4 and z_ax - PL_T >= INSERT_L + 2, 'strap saddle 
 assert WING_X[0] >= BAT_X0 + 3.5 + 2 and WING_X[1] <= bat_x1 - STRAP_T - 2, 'battery wings too short for the straps'
 assert STRAP_Y - STRAP_W / 2 >= ROD_Y + (ROD_D + FIT) / 2 + CL_OUT + 1, 'strap slots run into the clamps'
 assert STRAP_Y + STRAP_W / 2 <= WING_HW - 2, 'strap slots too close to the wing edge'
-assert PL_X_BACK <= bat_x1 - STRAP_T - 4 - IFB[1], 'no room for the interface box behind the battery'
+assert PL_X_BACK <= SPLIT_X - SPLIT_GAP / 2 - IFB[1] - 2, 'interface box does not fit on its plate'
+assert SPLIT_X + SPLIT_GAP / 2 <= bat_x1 - STRAP_T - 4 and WING_X[1] >= SPLIT_X + SPLIT_GAP / 2, 'cut must leave 4 mm behind the strap slot, wings on the carrier'
+assert all(abs(x - SPLIT_X) >= CL_L / 2 + 6 for x in CLAMP_X), 'a clamp straddles the cut'
 # LiDAR wall: the sensor's weight under a hard landing bends the wall root (layers run across it)
 M = LID_G * 9.81 * G_LAND * (LID_H / 2)
 sigma_wall = M / (2 * WALL_HW * WALL_T**2 / 6)
@@ -224,6 +241,9 @@ for x in CLAMP_X:
     for sy in (-1, 1):
         for dx in (-6, 6):
             circle(sk, (x + dx, sy * ROD_Y, -1), SCREW_D)
+        circle(sk, (x, sy * (ROD_Y - pinch_y), -1), PINCH_HEAD + 0.4)   # pinch screw goes in (head and key) through here
+for sy in (-1, 1):
+    circle(sk, (LANYARD_X, sy * LANYARD_Y, -1), LANYARD_D)     # safety cord
 extrude(c, sk, CUT, PL_T + 2, body=body)                       # M2.5 x 8 up through the plate into the clamps
 sk = sketch(c, 'xy', PL_T - 1.8)
 for x in CLAMP_X:
@@ -231,7 +251,10 @@ for x in CLAMP_X:
         for dx in (-6, 6):
             circle(sk, (x + dx, sy * ROD_Y, PL_T - 1.8), 5.2)
 extrude(c, sk, CUT, 2.0, body=body)                            # counterbores: heads sit flush under the plate
-carrier = c.bRepBodies.item(0); carrier.name = 'payload carrier'
+extrude(c, box_xy(sketch(c, 'xy', -1), SPLIT_X - SPLIT_GAP / 2, -WING_HW - 5, SPLIT_X + SPLIT_GAP / 2, WING_HW + 5, -1), CUT, PL_T + 2, body=body)
+assert c.bRepBodies.count == 2, 'the cut did not leave two pieces'
+carrier, ifb_plate = sorted(c.bRepBodies, key=lambda b: -b.boundingBox.maxPoint.x)
+carrier.name, ifb_plate.name = 'payload carrier', 'interface box plate'
 
 # ---- LiDAR strap: lower half ring round the top cap, ears screwed up into the saddle's inserts (carrier coords)
 st_occ = part('lidar strap'); c = st_occ.component
@@ -259,10 +282,11 @@ sk = sketch(c, 'xy')
 for dx in (-6, 6):
     circle(sk, (dx, 0, 0), INSERT_D)
 extrude(c, sk, CUT, INSERT_L + 1.0, body=cl)                   # inserts for the plate screws
-f = extrude(c, circle(sketch(c, 'xz'), (0, 0, bore_z), INSERT_D), NEW, sym=2 * (y_out + 1)).bodies.item(0)
-keep = extrude(c, box_xy(sketch(c, 'xy'), -CL_L, -50, CL_L, (ROD_D + FIT) / 2 + 0.5, 0), NEW, cl_h + 2).bodies.item(0)
-combine(c, f, [keep], CUT)                                     # grub screw insert hole in the outer wall only
-combine(c, cl, [f], CUT)
+zs = bore_z - SLIT / 2
+extrude(c, box_xy(sketch(c, 'xy', zs), -CL_L / 2 - 1, y_in - 1, CL_L / 2 + 1, 0, zs), CUT, SLIT, body=cl)   # slit: inner wall, at the rod axis
+extrude(c, circle(sketch(c, 'xy', -1), (0, -pinch_y, -1), PINCH_HEAD), CUT, pinch_seat + 1, body=cl)       # head pocket, from below
+extrude(c, circle(sketch(c, 'xy', pinch_seat), (0, -pinch_y, pinch_seat), SCREW_D), CUT, zs - pinch_seat, body=cl)   # through the lower jaw
+extrude(c, circle(sketch(c, 'xy', zs), (0, -pinch_y, zs), INSERT_D), CUT, cl_h - zs + 1, body=cl)   # insert, pressed in from the top
 clamp = c.bRepBodies.item(0); clamp.name = 'rod clamp'
 
 OUT = os.path.join(HERE, '..', 'Huntsman', 'Printed Parts', 'Payload Carrier')
@@ -273,9 +297,10 @@ res = {'wall_stress_MPa': round(sigma_wall, 2), 'wall_sf': round(SIGMA_LAYER_MPA
        'cam_centre_print': [round(v, 2) for v in cam_c], 'cam_lens_print': [round(v, 2) for v in mv(Ft, u_, -cH / 2)],
        'battery_x': [BAT_X0, round(bat_x1, 2)], 'plate_front_x': round(xf, 2), 'clamp_h': round(cl_h, 2),
        'lidar_axis_x': x_c, 'lidar_base_print_y': yb, 'strap_print_y': y_c}
-for name, occ, bd in (('payload-carrier', car_occ, carrier), ('rod-clamp', cl_occ, clamp), ('lidar-strap', st_occ, strap)):
-    assert occ.component.bRepBodies.count == 1 and bd.lumps.count == 1, f'{name} is not one solid'
-    em.execute(em.createSTEPExportOptions(os.path.join(OUT, f'{name}.step'), occ.component))   # mounting coords (the assembly uses these)
+for name, occ, bd in (('payload-carrier', car_occ, carrier), ('interface-box-plate', car_occ, ifb_plate), ('rod-clamp', cl_occ, clamp), ('lidar-strap', st_occ, strap)):
+    assert bd.lumps.count == 1 and occ.component.bRepBodies.count == (2 if occ is car_occ else 1), f'{name} is not one solid'
+    if name != 'interface-box-plate':  # the carrier's STEP holds both plates (the assembly uses these mounting coords)
+        em.execute(em.createSTEPExportOptions(os.path.join(OUT, f'{name}.step'), occ.component))
     if name in ('rod-clamp', 'lidar-strap'):   # clamp on its end (rod hole up); strap flat on its side
         R = adsk.core.Matrix3D.create()
         R.setToRotation(math.radians(-90), adsk.core.Vector3D.create(0, 1, 0) if name == 'rod-clamp' else adsk.core.Vector3D.create(1, 0, 0), adsk.core.Point3D.create(0, 0, 0))
@@ -288,6 +313,7 @@ for name, occ, bd in (('payload-carrier', car_occ, carrier), ('rod-clamp', cl_oc
     bb = bd.boundingBox
     res[name] = {'volume_cm3': round(bd.physicalProperties.volume, 2),
                  'bbox_mm': [round((bb.maxPoint.x - bb.minPoint.x) * 10, 1), round((bb.maxPoint.y - bb.minPoint.y) * 10, 1), round((bb.maxPoint.z - bb.minPoint.z) * 10, 1)]}
+    assert max(res[name]['bbox_mm'][:2]) <= BED - 2 * BED_MARGIN and res[name]['bbox_mm'][2] <= 256, f'{name} does not fit the X2D'
 T = adsk.core.Matrix3D.create(); T.translation = adsk.core.Vector3D.create(cm(0), cm(110), 0); cl_occ.transform = T   # picture only
 des.activateRootComponent(); app.userInterface.activeSelections.clear()
 for occ in (car_occ, cl_occ, st_occ):

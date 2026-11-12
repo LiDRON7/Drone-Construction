@@ -43,14 +43,14 @@ Three carbon plates and six truss arms.
 | Motor spacing | **216** between neighbours |
 | Leg tubes / skid tubes / skid foam | **16.04** / **9.89** OD; foam 12 ID, 18 OD |
 
-## Printed parts (PETG, weights as sliced)
+## Printed parts (PETG-CF, propeller guards PETG; weights as sliced)
 
 Every screw that goes into a printed part goes into an M2.5 heat-set insert (holes are 3.6 mm wide, 4 mm deep inserts;
 change `INSERT_D`/`INSERT_L` in the scripts if yours differ).
 
 | Part | Weight | Holds | Fixed by |
 |---|---|---|---|
-| Propeller guard (x6) | 33.5 each | one prop each | the motor screws (no insert: they go into the motor) |
+| Propeller guard (x6) | 32.0 each | one prop each | the motor screws (no insert: they go into the motor) |
 | GPS mast | 38.1 | GPS module | 4 x M2.5 x 6 from under the top plate, through it, into 4 inserts in the foot |
 | Landing-leg mount | 79.2 | both legs, the battery and the OAK-D Pro | 8 x M2.5 x 6 from above the battery plate into 8 inserts; 2 x M2.5 x 25 cross bolts into 2 inserts |
 | Landing-leg foot (x2) | 22.4 each | skid tube | M2.5 x 25 cross bolt into 1 insert; 2 x M2.5 x 6 grub screws in 2 inserts |
@@ -77,6 +77,8 @@ the Pi.
    Actuators tab, assign each ESC output to the motor position PX4 shows and run the motor test. Spin directions
    don't change.
 2. Mount the Pixhawk and the GPS with their arrows toward the camera, and recalibrate the sensors and compass.
+   The propeller guards sit under the motors, inside the motor screws' grip: put blue threadlocker on those screws
+   and check them after the first 3 flights (PETG settles a little under screws).
 3. Set the sensor offsets from the centre of mass:
 
 | Parameter | Value |

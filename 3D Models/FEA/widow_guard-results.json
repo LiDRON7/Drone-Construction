@@ -1,0 +1,51 @@
+{
+ "material": "PETG (XY, conservative)",
+ "E_MPa": 1500.0,
+ "nodes": 6138,
+ "tets": 17006,
+ "hand push 1 kg": {
+  "max_vm_MPa": 30.96,
+  "max_vm_3mm_from_supports_MPa": 30.96,
+  "sf_vs_strength": 0.97,
+  "max_disp_mm": 10.64,
+  "ring_moves_toward_prop_mm": 4.14,
+  "tip_gap_mm": 6.4,
+  "load_N": 9.8
+ },
+ "front bump 1 g": {
+  "max_vm_MPa": 58.36,
+  "max_vm_3mm_from_supports_MPa": 58.36,
+  "sf_vs_strength": 0.51,
+  "max_disp_mm": 20.06,
+  "ring_moves_toward_prop_mm": 7.8,
+  "tip_gap_mm": 6.4,
+  "load_N": 18.5
+ },
+ "side bump 1 g": {
+  "max_vm_MPa": 121.57,
+  "max_vm_3mm_from_supports_MPa": 121.57,
+  "sf_vs_strength": 0.25,
+  "max_disp_mm": 28.14,
+  "ring_moves_toward_prop_mm": 6.15,
+  "tip_gap_mm": 6.4,
+  "load_N": 18.5
+ },
+ "bump between struts 1 g": {
+  "max_vm_MPa": 71.61,
+  "max_vm_3mm_from_supports_MPa": 71.61,
+  "sf_vs_strength": 0.42,
+  "max_disp_mm": 23.18,
+  "ring_moves_toward_prop_mm": 15.63,
+  "tip_gap_mm": 6.4,
+  "load_N": 18.5
+ },
+ "lifted by the ring 1 kg": {
+  "max_vm_MPa": 145.63,
+  "max_vm_3mm_from_supports_MPa": 145.63,
+  "sf_vs_strength": 0.21,
+  "max_disp_mm": 44.43,
+  "ring_moves_toward_prop_mm": 12.66,
+  "tip_gap_mm": 6.4,
+  "load_N": 9.8
+ }
+}
