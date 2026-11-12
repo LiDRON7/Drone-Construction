@@ -38,6 +38,9 @@ ARM0      = -30.0                # arm 1 at front right; numbers rise counter-cl
                                  # mast between arms 5 and 6, legs under 6 and 3, battery tips between 1-2 (front) and 4-5)
 BP_Z      = -BP_GAP - PLATE_T    # underside of the battery plate
 WITH_GUARDS = True
+WITH_RAIN = True      # rain canopy, antenna collar, camera visor, ESC covers and motor caps (Printed Parts/Rain Cover, rain_cover.py)
+CAP_T = 1.0 if WITH_RAIN else 0.0   # the motor cap's disc sits between the motor and the prop
+RAIN_DIR = os.path.join(HERE, '..', 'Widow', 'Printed Parts', 'Rain Cover')
 
 # name, shape, dims (mm), centre (x, y, z) mm, mass g, rot_z deg, rot_y deg, rot_x deg (applied x, then y, then z)
 PARTS = []
@@ -67,8 +70,11 @@ for i in range(6):
     add(f'frame arm #{i+1}', 'arm', (ARM_L, ARM_W, GAP, H_TIP), (rm*cx, rm*cy, PLATE_T + GAP/2), 30, rz=a)
     mz = ARM_TOP + (2.0 if WITH_GUARDS else 0.0)   # motor base; the guard hub (2 mm) sits between arm and motor
     add(f'propulsion motor Storm M2208 #{i+1}', 'cyl', (27.5, 20.0), (R_MOTOR*cx, R_MOTOR*cy, mz + 10), 44)        # EST 44 g; prop seat 20 mm above the base (measured)
-    add(f'propulsion propeller 8x4.5 #{i+1}', 'prop', (19.6, 7.0), (R_MOTOR*cx, R_MOTOR*cy, mz + 20 + 3.5), 8, rz=a)  # real blade mesh + 8 g hub body (EST weight)
+    add(f'propulsion propeller 8x4.5 #{i+1}', 'prop', (19.6, 7.0), (R_MOTOR*cx, R_MOTOR*cy, mz + 20 + CAP_T + 3.5), 8, rz=a)  # real blade mesh + 8 g hub body (EST weight)
     add(f'propulsion ESC F35A #{i+1}', 'box', (30, 16, 5), (140*cx, 140*cy, arm_floor_z(140) + 2.5 + 1.5), 7.5, rz=a)  # +1.5: flat ESC on a sloped floor  # runs inside the arm
+    if WITH_RAIN:   # ESC cover: roof on the arm over the ESC (drawn upside down, as it prints); motor cap on the bell's top
+        add(f'printed ESC cover #{i+1}', 'step', (os.path.join(RAIN_DIR, 'esc-cover.step'),), (140*cx, 140*cy, ARM_TOP + 1.2), 2.6, rz=a, rx=180)   # as sliced, ASA
+        add(f'printed motor cap #{i+1}', 'step', (os.path.join(RAIN_DIR, 'motor-cap.step'),), (R_MOTOR*cx, R_MOTOR*cy, mz + 20), 1.3)             # as sliced, ASA
     if WITH_GUARDS:
         add(f'printed propeller guard #{i+1}', 'step', (GUARD_STEP,), (R_MOTOR*cx, R_MOTOR*cy, ARM_TOP), 33.7, rz=a)   # the real printed guard, hub on the arm pad
 # landing gear: one printed mount takes all 8 screws under the battery plate, holds both legs (leaning out LEAN deg)
@@ -103,6 +109,9 @@ GPS_Z = FC_Z + 48.0                   # cradle floor top; must match CRADLE_Z + 
 add('printed GPS mast', 'step', (MAST_STEP,), (SQ_X, SQ_Y, FC_Z), MAST_G)
 add('gps H-RTK F9P Helical module', 'box', (53.86, 35.3, 12.9), (SQ_X, SQ_Y, GPS_Z + 6.45), 38.25)
 add('gps H-RTK F9P Helical antenna', 'cyl', (27.5, 59), (SQ_X, SQ_Y, GPS_Z + 12.9 + 29.5), 19)      # 57.25 g total measured, split EST
+if WITH_RAIN:   # canopy on the top plate, strapped to arms 2, 4 and 6; collar on the antenna, on the canopy roof (ROOF + T in rain_cover.py)
+    add('printed rain canopy', 'step', (os.path.join(RAIN_DIR, 'rain-canopy.step'),), (0, 0, FC_Z), 76.6)                  # as sliced, ASA
+    add('printed antenna collar', 'step', (os.path.join(RAIN_DIR, 'antenna-collar.step'),), (SQ_X, SQ_Y, FC_Z + 65.0 + 1.2), 4.0)   # as sliced, TPU
 add('radio telemetry SiK V3 915MHz', 'box', (28, 53, 10.7), (0, 66, FC_Z + 5.35), 15)             # left lobe, over arm 3, ~100 mm from the GPS; EST weight
 add('radio RC receiver RadioLink R9DS', 'box', (43, 24, 15), (46, -28, FC_Z + 7.5), 12.53)   # front right lobe; measured with its lead
 add('power distribution board', 'box', (45, 35, 6), (0, 0, -3), 15)       # under the bottom plate, next to the battery lead, away from the compass; EST size and weight
@@ -119,6 +128,8 @@ ct, st = math.cos(math.radians(TILT)), math.sin(math.radians(TILT))
 cam_at = lambda k: (CAM_C[0] + k*ct, 0, BP_Z - CAM_C[1] - k*st)   # k mm forward along the camera axis from the pocket centre
 add('camera Luxonis OAK-D Pro', 'box', (14.28, 96.96, 29.45), cam_at((23.55 - 14.28)/2 - 0.2), 77.69, ry=TILT)        # body; 89.69 g measured in all
 add('camera Luxonis OAK-D Pro heatsink', 'box', (8.87, 79, 25), cam_at((23.55 - 8.87)/2 - 0.2 - 14.28), 12, ry=TILT)   # fins stop ~9 mm from each end (photo); split EST
+if WITH_RAIN:   # visor taped on the cradle's top: its x = 0 is the cradle's top front edge, drawn upside down (as it prints)
+    add('printed camera visor', 'step', (os.path.join(RAIN_DIR, 'camera-visor.step'),), (CAM_LENS[0] + (29.45 + 0.8)/2*st, 0, BP_Z + 1.2), 5.7, rx=180)   # as sliced, ASA
 add('power battery 3S 5500mAh LiPo', 'box', (135.4, 43.2, 31.1), (BATT_X, 0, BP_Z - FL_T - 31.1/2), 361.98)    # measured; x is the balance trim
 # self-check: rays over the camera's view (OAK-D Pro stereo 80 x 55 deg, spec sheet). No prop or arm may show;
 # the guard rings may nick the top corners (GUARD_MAX % of the view): fixed, close pixels the software masks.
@@ -321,7 +332,8 @@ for occ in root.occurrences:
     bodies.add(occ.bRepBodies.item(0))
 ii = des.createInterferenceInput(bodies); ii.areCoincidentFacesIncluded = False
 cname = lambda e: (e.assemblyContext.component if e.assemblyContext else e.parentComponent).name.split(' [')[0]
-clashes = sorted({tuple(sorted((cname(r.entityOne), cname(r.entityTwo)))) for r in des.analyzeInterference(ii)})
+clashes = sorted({tuple(sorted((cname(r.entityOne), cname(r.entityTwo)))) for r in des.analyzeInterference(ii)}
+                 - {('gps H-RTK F9P Helical antenna', 'printed antenna collar')})   # the collar is a stretch fit on the antenna
 def inside(pt, poly):  # ray casting
     x, y = pt; c = False
     for i in range(len(poly)):
