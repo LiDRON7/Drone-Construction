@@ -24,18 +24,20 @@ Tarot 680 PRO with the Velodyne Puck LITE. Parts, sizes, weights and LiDAR wirin
 
 | Picture | Part | Print | What it does |
 |---|---|---|---|
-| <img src="3D%20Models/Huntsman/Printed%20Parts/Payload%20Carrier/payload-carrier-preview.png" width="220"> | [Payload Carrier](3D%20Models/Huntsman/Printed%20Parts/Payload%20Carrier) | 1 carrier, 6 rod clamps | Hangs under the frame and holds the LiDAR, battery, camera and LiDAR interface box |
-| <img src="3D%20Models/Huntsman/Printed%20Parts/Propeller%20Guard/propeller-guard-preview.png" width="220"> | [Propeller Guard](3D%20Models/Huntsman/Printed%20Parts/Propeller%20Guard) | 6 guards, 6 clamps | One per 13" prop, clamped to the arm tube |
+| <img src="3D%20Models/Huntsman/Printed%20Parts/Payload%20Carrier/payload-carrier-preview.png" width="220"> | [Payload Carrier](3D%20Models/Huntsman/Printed%20Parts/Payload%20Carrier) | 1 carrier, 1 interface-box plate, 1 LiDAR strap, 6 rod clamps | Hangs under the frame and holds the LiDAR, battery, camera and LiDAR interface box |
+| <img src="3D%20Models/Huntsman/Printed%20Parts/Propeller%20Guard/propeller-guard-preview.png" width="220"> | [Propeller Guard](3D%20Models/Huntsman/Printed%20Parts/Propeller%20Guard) | 6 guards (2 halves each) | One per 13" prop, held under the motor by its screws |
 | | GPS Mast | 1 | Same print as Widow's |
 
-Print everything in PETG. Use PLA only for test prints.
+We print on a Bambu Lab X2D (bed 256 x 256 mm). Propeller guards are PETG; Huntsman's payload carrier, rod clamps and LiDAR strap are PAHT-CF
+(dry it first); everything else is PETG-CF. Use PLA only
+for test prints.
 
 ## Print a part
 
 Open the part's folder and pick a file:
 
-- `.gcode` goes straight to our Kobra 2 Max
-- `.3mf` opens in Anycubic Slicer Next with the settings already set
+- `.gcode.3mf` is sliced for the X2D: open it in Bambu Studio (or send it from Bambu Handy) and print. Pick the
+  AMS slot with the right filament when it asks.
 - `.stl` is for any other printer (click it on GitHub to spin it in 3D)
 - `.step` opens in Fusion or any CAD program
 

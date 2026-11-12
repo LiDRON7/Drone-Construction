@@ -1,0 +1,15 @@
+{
+ "material": "PAHT-CF (across layers, conservative)",
+ "E_MPa": 4000.0,
+ "nodes": 19444,
+ "tets": 66748,
+ "hard landing 8 g": {
+  "max_vm_MPa": 11.46,
+  "max_vm_3mm_from_supports_MPa": 11.46,
+  "sf_vs_strength": 2.18,
+  "max_disp_mm": 0.79,
+  "lidar_N": 46.3,
+  "battery_N": 51.6,
+  "max_sag_mm": 0.08
+ }
+}
