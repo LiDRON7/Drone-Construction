@@ -26,7 +26,7 @@ PARTS = {
     'camera Luxonis OAK-D Pro':          ('cam', (14.28, 96.96, 29.45), (23.55 - 14.28) / 2 - 0.2, 77.69),   # body; 89.69 g measured in all
     'camera Luxonis OAK-D Pro heatsink': ('cam', (8.87, 79, 25), (23.55 - 8.87) / 2 - 0.2 - 14.28, 12),     # fins stop ~9 mm from each end (as Widow)
     'power battery 6S 5200 mAh':         ('box', (43.5, 133, 49.5), ((BAT_X0 + BAT_X1 + 1) / 2, 0, Z_PT - 4 - 24.75), 658),  # listing
-    'lidar Velodyne interface box':      ('box', (53, 75, 28), (-102.5, 0, Z_PT - 4 - 14), 80),        # EST size and weight
+    'lidar Velodyne interface box':      ('box', (53, 75, 28), (-102.5, 0, Z_PT - 4 - 1.2 - 14), 80),  # EST size and weight; 1.2 = its rain cover's sheet
     'power step-down 12V (LiDAR)':       ('box', (45, 26, 14), (-102.0, 0, Z_PT + 7), 25),             # EST, on top of the interface-box plate
     'flight controller foam mount':      ('box', (75, 46, 6), (0, 0, TOP + 3), 8),
     'flight controller Pixhawk 6X Mini': ('box', (72.8, 43.4, 31), (0, 0, TOP + 6 + 15.5), 54.49),    # measured, baseboard + FMU
@@ -82,14 +82,29 @@ for x in CLAMP_X:
 mast = import_step(MAST_STEP, 'printed GPS mast', rot((0, 0, 1), 0, (-55, 40, TOP)))
 strap = import_step(os.path.join(CARRIER, 'lidar-strap.step'), 'printed lidar strap', rot((1, 0, 0), 180, (0, 0, Z_PT)))
 ours = [carrier, mast, strap] + clamps
+# rain cover (rain_cover.py): canopy on the top plate, strapped to 3 arms; collar on the GPS antenna, on the canopy roof;
+# visor taped on the camera cradle's top (its x = 0 is the cradle's top front edge, drawn upside down)
+RAIN, WRAIN = os.path.join(HUNT, 'Printed Parts', 'Rain Cover'), os.path.join(HERE, '..', 'Widow', 'Printed Parts', 'Rain Cover')
+CANOPY_G, COLLAR_G, VISOR_G = 91.1, 4.0, 5.7      # as sliced: ASA, TPU, ASA
+ESC_COVER_G, CAP_G, IFB_COVER_G, CAP_T = 11.0, 2.7, 15.4, 1.0   # as sliced, ASA; the motor cap's disc lifts the prop 1 mm
+ESC_R, ARM_TOP_Z, MOTOR_H = 165.0, -3.0, 30.4      # EST: where the ESC covers sit along the arms; arm tube top and motor height (model)
+VISOR_X = CAM_LENS[0] + (29.45 + 0.8) / 2 * math.sin(math.radians(TILT))
+canopy = import_step(os.path.join(RAIN, 'rain-canopy.step'), 'printed rain canopy', rot((0, 0, 1), 0, (0, 0, TOP)))
+ours += [canopy, import_step(os.path.join(WRAIN, 'antenna-collar.step'), 'printed antenna collar', rot((0, 0, 1), 0, (-55, 40, TOP + 65.0 + 1.2))),
+         import_step(os.path.join(WRAIN, 'camera-visor.step'), 'printed camera visor', rot((1, 0, 0), 180, (VISOR_X, 0, Z_PT + 1.2))),
+         import_step(os.path.join(RAIN, 'interface-box-cover.step'), 'printed interface box cover', rot((1, 0, 0), 180, (0, 0, Z_PT - 4)))]   # sheet against the plate's underside
 GUARD = os.path.join(HUNT, 'Printed Parts', 'Propeller Guard')
 MOUNT_Z, HUB_T = -4.89, 3.0      # top of the Tarot motor plate (model); the guard's hub under each motor lifts it this much
 ARM_ANGS, ARM_R, RING_R, RING_Z, RING_HALF = (30, 90, 150, -150, -90, -30), 343.0, 173.75, (MOUNT_Z, MOUNT_Z + 40.8), 95.0   # huntsman_propeller_guard.py
 for o in [o for o in root.allOccurrences if 'motor v5' in o.name or 'propeller v4' in o.name]:
-    T = o.transform2; T.translation = adsk.core.Vector3D.create(T.translation.x, T.translation.y, T.translation.z + cm(HUB_T)); o.transform2 = T
+    T = o.transform2; T.translation = adsk.core.Vector3D.create(T.translation.x, T.translation.y, T.translation.z + cm(HUB_T + (CAP_T if 'propeller' in o.name else 0))); o.transform2 = T
 for a in ARM_ANGS:                     # guard local coords: motor axis at 0, x outward, z = motor mount top
     M = rot((0, 0, 1), a, (ARM_R * math.cos(math.radians(a)), ARM_R * math.sin(math.radians(a)), MOUNT_Z))
     ours.append(import_step(os.path.join(GUARD, 'propeller-guard.step'), 'printed propeller guard', M))
+    c_, s_ = math.cos(math.radians(a)), math.sin(math.radians(a))
+    ours.append(import_step(os.path.join(RAIN, 'motor-cap.step'), 'printed motor cap', rot((0, 0, 1), 0, (ARM_R * c_, ARM_R * s_, MOUNT_Z + HUB_T + MOTOR_H))))
+    M = rot((1, 0, 0), 180); M.transformBy(rot((0, 0, 1), a, (ESC_R * c_, ESC_R * s_, ARM_TOP_Z + 1.2)))   # drawn upside down; roof on the arm tube
+    ours.append(import_step(os.path.join(RAIN, 'esc-cover.step'), 'printed ESC cover', M))
 for name, (shape, size, c, g) in PARTS.items():
     if shape == 'box':
         b = tbm.createBox(adsk.core.OrientedBoundingBox3D.create(P3(*c), V3(1, 0, 0), V3(0, 1, 0), cm(size[0]), cm(size[1]), cm(size[2])))
@@ -119,11 +134,16 @@ for r in des.analyzeInterference(ii):
     if not (mine(a) or mine(b)):
         continue                       # the frame model's own screws in their holes
     clashes.add(tuple(sorted((mine(a) or a[-1], mine(b) or b[-1]))))
+clashes = {c for c in clashes if not ('antenna collar' in c[0] + c[1] and 'Helical antenna' in c[0] + c[1])}   # the collar is a stretch fit on the antenna
 
 # centre of mass from the table
 items = [(n, g, c) for n, (s, z_, c, g) in PARTS.items()]
 cc = carrier.physicalProperties.centerOfMass
 items += [('printed lidar strap', STRAP_G, (LID_AX_X, -28.15, LID_AX_Z - 40)), ('printed payload carrier', CARRIER_G, (cc.x * 10, cc.y * 10, cc.z * 10)), ('printed rod clamps x6', 6 * CLAMP_G, (-37, 0, Z_PT + 10))]
+cr = canopy.physicalProperties.centerOfMass
+items += [('printed rain canopy', CANOPY_G, (cr.x * 10, cr.y * 10, cr.z * 10)), ('printed antenna collar', COLLAR_G, (-55, 40, TOP + 70)),
+          ('printed camera visor', VISOR_G, (VISOR_X - 4, 0, Z_PT)), ('printed interface box cover', IFB_COVER_G, (-102.5, 0, Z_PT - 20)),
+          ('printed ESC covers x6', 6 * ESC_COVER_G, (0, 0, ARM_TOP_Z - 15)), ('printed motor caps x6', 6 * CAP_G, (0, 0, MOUNT_Z + HUB_T + MOTOR_H))]
 items += [(n, g, (0, 0, z)) for n, (g, z) in SPREAD.items() if n != 'printed GPS mast'] + [('printed GPS mast', 38.1, (-55, 40, TOP + 25))]
 M_tot = sum(g for _, g, _ in items)
 cg = [sum(g * c[i] for _, g, c in items) / M_tot for i in range(3)]
@@ -135,7 +155,8 @@ def aabb(o):
 leaves = [o for o in root.allOccurrences if o.bRepBodies.count and o.fullPathName.startswith('Tarot 680 PRO frame')]
 boxes = [(o.name, aabb(o)) for o in leaves if 'propeller' not in o.name]
 props = [aabb(o) for o in leaves if 'propeller' in o.name]
-boxes += [(o.component.name, aabb(o)) for o in ours if 'guard' not in o.component.name and o.component.name not in ('lidar Velodyne Puck LITE', 'printed payload carrier', 'printed lidar strap', 'camera Luxonis OAK-D Pro', 'camera Luxonis OAK-D Pro heatsink')]
+boxes += [(o.component.name, aabb(o)) for o in ours if 'guard' not in o.component.name and o.component.name not in ('lidar Velodyne Puck LITE', 'printed payload carrier', 'printed lidar strap', 'camera Luxonis OAK-D Pro', 'camera Luxonis OAK-D Pro heatsink',
+                                                                                              'printed rain canopy')]   # canopy: above the top plate, and Fusion's box for its leaning wall is far too big
 def hit(o, d, box, tmax=30000.0):
     t0, t1 = 0.0, tmax
     for i in range(3):

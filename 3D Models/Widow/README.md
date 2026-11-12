@@ -74,10 +74,51 @@ The tip gap is 6.4 mm, so a full-weight hit at the outer point now stays clear o
 PETG is good for about 30 MPa, so the 1 g bumps sit right at its limit: it bends there, it doesn't shatter. Don't
 lift the drone by the guards. 1.7 g heavier per guard than the old one.
 
+## Rain covers (ASA, collar TPU; weights as sliced)
+
+The goal is to fly, land and sit in light to moderate rain. Not a dunk, not a hose. **None of this is tested yet**, so
+call them rain covers, not waterproofing, until the spray test below passes. They shed water instead of sealing it out:
+every cover is a roof with an open bottom, so heat and condensation still get out. `Fusion Scripts/rain_cover.py`
+builds them; files are in `Printed Parts/Rain Cover`.
+
+| Part | Weight | Covers | Fixed by |
+|---|---|---|---|
+| Rain canopy | 76.6 | everything on the top plate (Pixhawk, radios, GPS module) and the window over the Pi; only the GPS antenna pokes out | sits on arms 2, 4 and 6; a 12 mm velcro strap through each strap block and round the arm |
+| Antenna collar (TPU) | 4.0 | the roof hole round the GPS antenna | pushed down the antenna until its flange lies on the roof |
+| Camera visor | 5.7 | the lenses, from above and ahead (20 mm out, stays out of the picture) | VHB tape on the cradle's top; the USB-C cable comes up through one of its slots |
+| ESC cover (x6) | 2.6 each | the ESC in each arm; ends open so the prop wash still cools it | 2 small zip ties round the arm |
+| Motor cap (x6) | 1.3 each | the holes in the top of each motor bell | clamped under the prop; it spins with it |
+
+The canopy prints roof-down with no supports (2 h 33 min, `rain-canopy.gcode.3mf`). The ESC covers, motor caps and
+visor print together (53 min, `esc-covers-motor-caps-visor.gcode.3mf`). The collar prints alone in TPU.
+
+Not printed, and they matter as much as the prints:
+- Conformal coat (silicone or acrylic) on the ESCs and the power board's solder joints. Keep it off connectors.
+- Heat-shrink over the 5 V step-down. Dielectric grease in the battery and ESC plugs.
+- Tape over the camera cradle's unused USB-C window, and self-amalgamating tape round the USB-C plug.
+- Every cable that enters the canopy comes up from below with a drip loop.
+- The battery stays open on purpose: a sealed LiPo traps heat and gas. Dry the plugs after a wet flight.
+- Motors run wet fine, but their bearings rust. Spin them dry and oil the bearings after rain.
+
+What it costs: 110 g, 5.8 % more weight, so about 8 % less hover time (EST, power goes with weight to the 1.5).
+We have not measured this drone's thrust, so do the hover-throttle check below before trusting it in wind.
+
+Check before you print (EST numbers in `rain_cover.py`): the top plate's size (`plate_r`, I only have a photo), and
+the arm width (`tab_w`, `inner_w`). Print the canopy once in PLA to check the fit.
+
+Before anyone calls it rain-proof, in this order:
+1. Fit: the canopy drops on without touching anything, the antenna is centred in the hole, the props clear the strap blocks.
+2. Hover in the dry with the covers on: hover throttle, vibration in the log (the motor caps spin: if vibration goes
+   up, take them off), GPS satellite count and compass against a flight without them.
+3. Heat: 10 minutes of hover, then touch the ESCs and motors and read the Pi's temperature.
+4. Spray, on the bench, battery out: water-indicator paper on every board, a garden sprayer from above and from 60°
+   to the sides for 10 minutes (that is roughly IPX3/IPX4). Pass = every paper dry.
+5. Only then fly in rain, with the pilot ready to land.
+
 ## Whole drone
 
-About **1886** g with the battery, guards and printed parts. The centre of mass is 1.6 mm forward of the frame
-centre and 0.8 mm to the right, which is fine; sliding the battery about 9 mm back centres it.
+About **1996** g with the battery, guards, printed parts and rain covers (1886 without the covers). The centre of mass
+is 1.7 mm forward of the frame centre and 0.9 mm to the right, which is fine; sliding the battery about 9 mm back centres it.
 
 Why the camera sits where it does: under the front gap, tilted 10° down. No arm is straight ahead. Flying forward
 tips the drone nose-down about 10°, so at 10° the camera still sees 7.5° above level; at 15° the horizon sat on the
@@ -100,10 +141,11 @@ the Pi.
 
 | Parameter | Value |
 |---|---|
-| `EKF2_IMU_POS_X` / `_Y` / `_Z` | -0.002 / -0.015 / -0.066 |
-| `EKF2_GPS_POS_X` / `_Y` / `_Z` | -0.015 / 0.030 / -0.128 |
+| `EKF2_IMU_POS_X` / `_Y` / `_Z` | -0.002 / -0.015 / -0.063 |
+| `EKF2_GPS_POS_X` / `_Y` / `_Z` | -0.015 / 0.030 / -0.124 |
 
-The camera lens is 82 mm forward of the centre of mass and 43 mm below it (for the OAK-D's extrinsics).
+The camera lens is 82 mm forward of the centre of mass and 47 mm below it (for the OAK-D's extrinsics). These are with
+the rain covers on; without them the three `_Z` numbers are -0.066, -0.128 and 43 mm.
 
 ## Interference
 

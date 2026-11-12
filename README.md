@@ -13,6 +13,7 @@ Storm Drone 6 V3. Parts, sizes and weights: [Widow README](3D%20Models/Widow/REA
 | <img src="3D%20Models/Widow/Printed%20Parts/Landing%20Leg/landing-leg-preview.png" width="220"> | [Landing Leg](3D%20Models/Widow/Printed%20Parts/Landing%20Leg) | 1 mount, 2 feet | Holds both legs, the battery and the camera |
 | <img src="3D%20Models/Widow/Printed%20Parts/GPS%20Mast/gps-mast-preview.png" width="220"> | [GPS Mast](3D%20Models/Widow/Printed%20Parts/GPS%20Mast) | 1 | Lifts the GPS above the electronics |
 | <img src="3D%20Models/Widow/Printed%20Parts/Propeller%20Guard/propeller-guard-preview.png" width="220"> | [Propeller Guard](3D%20Models/Widow/Printed%20Parts/Propeller%20Guard) | 6 | One per prop, held by the motor screws |
+| <img src="3D%20Models/Widow/Printed%20Parts/Rain%20Cover/rain-cover-preview.png" width="220"> | [Rain Cover](3D%20Models/Widow/Printed%20Parts/Rain%20Cover) | 1 canopy, 1 antenna collar, 1 camera visor, 6 ESC covers, 6 motor caps | Keeps rain off the electronics, ESCs, motors and camera (not tested yet) |
 
 ## Huntsman
 
@@ -26,9 +27,10 @@ Tarot 680 PRO with the Velodyne Puck LITE. Parts, sizes, weights and LiDAR wirin
 |---|---|---|---|
 | <img src="3D%20Models/Huntsman/Printed%20Parts/Payload%20Carrier/payload-carrier-preview.png" width="220"> | [Payload Carrier](3D%20Models/Huntsman/Printed%20Parts/Payload%20Carrier) | 1 carrier, 1 interface-box plate, 1 LiDAR strap, 6 rod clamps | Hangs under the frame and holds the LiDAR, battery, camera and LiDAR interface box |
 | <img src="3D%20Models/Huntsman/Printed%20Parts/Propeller%20Guard/propeller-guard-preview.png" width="220"> | [Propeller Guard](3D%20Models/Huntsman/Printed%20Parts/Propeller%20Guard) | 6 guards (2 halves each) | One per 13" prop, held under the motor by its screws |
+| <img src="3D%20Models/Huntsman/Printed%20Parts/Rain%20Cover/rain-cover-preview.png" width="220"> | [Rain Cover](3D%20Models/Huntsman/Printed%20Parts/Rain%20Cover) | 1 canopy, 1 interface-box cover, 6 ESC covers, 6 motor caps, plus Widow's antenna collar and camera visor | Keeps rain off the electronics, payload, ESCs, motors and camera (not tested yet) |
 | | GPS Mast | 1 | Same print as Widow's |
 
-We print on a Bambu Lab X2D (bed 256 x 256 mm). Propeller guards are PETG; Huntsman's payload carrier, rod clamps and LiDAR strap are PAHT-CF
+We print on a Bambu Lab X2D (bed 256 x 256 mm). Propeller guards are PETG; rain covers are ASA (the antenna collar is TPU); Huntsman's payload carrier, rod clamps and LiDAR strap are PAHT-CF
 (dry it first); everything else is PETG-CF. Use PLA only
 for test prints.
 
@@ -67,7 +69,7 @@ Reference parts start with their kind so they sort together: `frame-`, `propulsi
 ## Change a part's size
 
 Each part has a script in `Fusion Scripts` (`landing_leg.py` builds Widow's landing leg, `huntsman_*.py` build
-Huntsman's parts). Sizes are at the top of each script. With Fusion open and the
+Huntsman's parts, `rain_cover.py` builds both drones' rain covers). Sizes are at the top of each script. With Fusion open and the
 [Fusion360MCP add-in](https://github.com/faust-machines/fusion360-mcp-server) running:
 
 ```
