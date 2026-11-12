@@ -70,7 +70,7 @@ for i in range(6):
     add(f'propulsion propeller 8x4.5 #{i+1}', 'prop', (19.6, 7.0), (R_MOTOR*cx, R_MOTOR*cy, mz + 20 + 3.5), 8, rz=a)  # real blade mesh + 8 g hub body (EST weight)
     add(f'propulsion ESC F35A #{i+1}', 'box', (30, 16, 5), (140*cx, 140*cy, arm_floor_z(140) + 2.5 + 1.5), 7.5, rz=a)  # +1.5: flat ESC on a sloped floor  # runs inside the arm
     if WITH_GUARDS:
-        add(f'printed propeller guard #{i+1}', 'step', (GUARD_STEP,), (R_MOTOR*cx, R_MOTOR*cy, ARM_TOP), 33.5, rz=a)   # the real printed guard, hub on the arm pad
+        add(f'printed propeller guard #{i+1}', 'step', (GUARD_STEP,), (R_MOTOR*cx, R_MOTOR*cy, ARM_TOP), 33.7, rz=a)   # the real printed guard, hub on the arm pad
 # landing gear: one printed mount takes all 8 screws under the battery plate, holds both legs (leaning out LEAN deg)
 # and the battery tray between them (Printed Parts/Landing Leg, landing_leg.py). The mount is drawn sockets-up, so rx=180
 # hangs it under the plate; the foot is a straight T drawn with its skid along x at its origin, turned on the skid to
@@ -148,7 +148,7 @@ def _cam_ray(d):
         if A_ > 1e-12 and disc >= 0:
             for t in ((-B_ - math.sqrt(disc))/(2*A_), (-B_ + math.sqrt(disc))/(2*A_)):
                 hz = lz + t*d[2]; rel = (math.degrees(math.atan2(t*d[1] - cy, lx + t*d[0] - cx)) - a + 180) % 360 - 180
-                if t > 0 and ARM_TOP <= hz <= ARM_TOP + 28 and abs(rel) <= 95:
+                if t > 0 and ARM_TOP <= hz <= ARM_TOP + 30 and abs(rel) <= 95:
                     return 'guard'
     return None
 _hits, _n = {}, 0
