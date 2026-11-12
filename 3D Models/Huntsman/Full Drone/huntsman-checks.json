@@ -1,47 +1,47 @@
 {
  "clashes": [],
- "total_g": 4269.3,
+ "total_g": 4263.8,
  "cg_mm": [
-  -1.7,
+  -1.9,
   -0.4,
-  -36.8
+  -36.0
  ],
  "lidar_clear_deg_forward_back": [
-  104,
-  102
+  103,
+  101
  ],
  "lidar_ground_strip_at_3m_m": [
-  -28.23,
+  -30.87,
   1.61
  ],
  "lidar_ground_clearance_mm": 88.0,
  "camera_rays_blocked": {
-  "20021-019,020,021_motor-mount v10 (4):1": 2,
+  "propeller guard ring": 24,
+  "20021-019,020,021_motor-mount v10 (3):1": 2,
   "20021-005_arm v1:3": 5,
-  "propeller guard ring": 16,
   "propeller": 3,
   "20021-005_arm v1:2": 5,
-  "20021-019,020,021_motor-mount v10 (3):1": 2
+  "20021-019,020,021_motor-mount v10 (2):1": 2
  },
  "camera_rays": 285,
  "EKF2_IMU_POS": [
   0.002,
   -0.0,
-  -0.067
+  -0.066
  ],
  "EKF2_GPS_POS": [
   -0.053,
   -0.04,
-  -0.129
+  -0.128
  ],
  "lidar_optical_from_cg_m": [
-  0.043,
+  0.044,
   0.002,
-  0.069
+  0.07
  ],
  "camera_lens_from_cg_m": [
-  0.133,
+  0.134,
   -0.0,
-  0.034
+  0.035
  ]
 }

@@ -16,8 +16,8 @@ Sizes are mm, weights g. The frame numbers come from an online Tarot 680 PRO mod
 | Part | Where it sits | Size | Weight |
 |---|---|---|---|
 | Velodyne Puck LITE | payload carrier, front, on its side (top facing right), cable up and forward | 103.3 across x 71.7 (datasheet) | 590 (datasheet) |
-| Velodyne interface box | under the carrier, back, velcro | 75 x 53 x 28 (EST) | 80 (EST) |
-| 12 V step-down for the LiDAR (6S in, 3 A out) | top of the carrier, between the rods, velcro | 45 x 26 x 14 (EST) | 25 (EST) |
+| Velodyne interface box | under the interface-box plate (behind the carrier), velcro | 75 x 53 x 28 (EST) | 80 (EST) |
+| 12 V step-down for the LiDAR (6S in, 3 A out) | top of the interface-box plate, between the rods, velcro | 45 x 26 x 14 (EST) | 25 (EST) |
 | PowerHobby 6S 5200 mAh 50C LiPo | carrier, across the drone behind the LiDAR, 2 straps | 133 x 43.5 x 49.5 (listing) | 658 (listing) |
 | Luxonis OAK-D Pro camera | cradle on the carrier's front, 10° down | **96.96** x **29.45** x **23.15** | **89.69** |
 | Pixhawk 6X Mini | top plate, centre, on its foam, arrow forward | 72.8 x 43.4 x 31 (spec) | **54.49** |
@@ -38,37 +38,93 @@ Sizes are mm, weights g. The frame numbers come from an online Tarot 680 PRO mod
 | Payload rods | 2 x 10 mm carbon, 60 apart, 280 long, running fore-aft, on 4 dampers; rod centres 35 below the top plate's underside |
 | Skids | 245 below the top plate's underside |
 
-## Printed parts (PETG, weights as sliced)
+## Printed parts (weights as sliced for the Bambu Lab X2D)
 
-| Part | Weight | Holds | Fixed by |
-|---|---|---|---|
-| Payload carrier | 213 | LiDAR, battery, camera, interface box, 12 V step-down | 6 rod clamps |
-| LiDAR strap | 10.7 | the LiDAR's top cap | 2 x M2.5 x 10 up into 2 inserts in the carrier's saddle |
-| Rod clamp (x6) | 6.8 each | the carrier, on the payload rods | slides onto a rod; 1 x M2.5 x 6 grub screw into the rod; 2 x M2.5 x 6 up through the carrier |
-| Propeller guard (x6) | 46.5 each | one 13" prop each | its arm clamp: 2 x M2.5 x 8 down into 2 inserts |
-| Arm clamp (x6) | 5.5 each | a guard, on the 16 mm arm tube, 88 mm inside the motor | 1 x M2.5 x 25 cross bolt under the tube into 1 insert |
-| GPS mast | 38.1 | GPS module | Widow's mast; 4 x M2.5 x 6 from under the top plate (drill a 17 mm square of 4 holes if the Tarot plate has none there) |
+The payload carrier, its rod clamps and the LiDAR strap are **PAHT-CF**: they touch the LiDAR (8 W) and sit next to
+the 6S battery in the sun, and PETG-CF goes soft at about 70 °C and slowly lets screws loosen. PAHT-CF takes far more
+heat and holds screws better. Dry it before printing (it soaks up water fast here). Propeller guards are **PETG**
+(they have to bend, not snap). The GPS mast stays PETG-CF.
 
-Carrier, LiDAR strap and 6 rod clamps print together: 263 g, 9 h 27 min (`Printed Parts/Payload Carrier/payload-carrier.gcode`).
-One guard + one arm clamp per plate: 52 g, 1 h 53 min (`Printed Parts/Propeller Guard/propeller-guard.gcode`, print 6).
+| Part | Material | Weight | Holds | Fixed by |
+|---|---|---|---|---|
+| Payload carrier | PAHT-CF | 161 | LiDAR, battery, camera | 4 rod clamps |
+| Interface-box plate | PAHT-CF | 15 | interface box, 12 V step-down | 2 rod clamps (the back pair) |
+| LiDAR strap | PAHT-CF | 7.4 | the LiDAR's top cap | 2 x M2.5 x 10 up into 2 inserts in the carrier's saddle |
+| Rod clamp (x6) | PAHT-CF | 6.3 each | the carrier and the interface-box plate, on the payload rods | 2 x M2.5 x 6 up through the carrier into 2 inserts; 1 x M2.5 x 16 pinch screw (below) |
+| Propeller guard (x6, 2 halves each) | PETG | 58.2 each | one 13" prop each | its hub sits under the motor: the motor's 3 screws (3 mm longer than stock) hold both halves; halves joined at the ring by 1 x M2.5 x 12 into 1 insert in the right half |
+| GPS mast | PETG-CF | 38.1 | GPS module | Widow's mast; 4 x M2.5 x 6 from under the top plate (drill a 17 mm square of 4 holes if the Tarot plate has none there) |
 
-**Propeller guards.** They clamp to the arm tube instead of going under the motor, so the motors and their screws
-stay untouched. The ring wraps the outer 190° of each prop with an 8 mm tip gap. It is solid at the prop tips and
-a 45° diamond lattice below them, which prints without supports and saves weight. Four triangular struts run back
-to the clamp, 12 mm under the prop. The struts are sized so the drone's whole weight pushing sideways on one guard
-doesn't buckle them (safety factor 1.7). Print them with 3 walls and 15 % infill (the profile in the `.3mf`): the
-parts are thin enough that the walls do the work. Before printing, measure how high the prop tips sit above the
-motor mount (`PROP_Z`, 25 mm in the model); the ring's solid band is centred on it.
+Carrier, interface-box plate, LiDAR strap and 6 rod clamps print together: 221 g, 9 h 38 min
+(`Printed Parts/Payload Carrier/payload-carrier.gcode.3mf`). Each guard half fills a plate: 29 g, 1 h 28 min
+(`propeller-guard-left.gcode.3mf`, `propeller-guard-right.gcode.3mf`, print each 6 times).
 
-Hardware: 42 M2.5 heat-set inserts (6 rod clamps x 3, 6 arm clamps x 3, LiDAR saddle 2, mast 4), 12 x M2.5 x 6 screws,
-6 x M2.5 x 6 grub screws, 2 x M2.5 x 10 (LiDAR strap),
-12 x M2.5 x 8 (guards), 6 x M2.5 x 25 (arm clamp cross bolts),
+**Rod clamps.** Each one pinches its rod instead of pressing a grub screw into it (a grub screw crushes carbon tube).
+The clamp's inner wall is slit at the rod's height. An M2.5 x 16 goes up through the hole in the carrier next to the
+clamp, sits in a pocket in the clamp, crosses the slit and screws into an insert pressed into the clamp's top, so you
+can tighten it with everything fitted. Its tip ends flush with the clamp top (2 mm under the frame).
+
+**Safety cord.** The whole payload (about 1.7 kg) hangs from the frame's 4 rubber dampers. If a damper ball pops out,
+everything falls. Loop a cord (Dyneema or Kevlar, about 1 m, 50 kg or more) through the 2 holes just behind the LiDAR
+and tie it round the frame's centre, slack enough that the dampers still work.
+
+**Propeller guards.** They go under the motor, like Widow's: a 3 mm hub sits between the motor and the Tarot motor
+plate and the motor's own 3 screws hold it, so it can't turn on the arm (the old guard clamped the round arm tube, and
+only friction held it there, 12 mm under the prop). There is no arm clamp any more. The ring wraps the outer 190° of
+each prop with an 8 mm tip gap: a solid band at the prop tips with a 5 mm lip round its top edge, and a diagonal
+lattice of 45° bars below. Four T-section struts run from the hub to the ring, 17 mm under the prop's lowest point,
+with a fin outside the ring at each strut end. The struts stay 3 mm thin under the motor bell (it sits 2 mm above the
+plate) and widen to 18 mm where they meet the hub. A whole guard is 349 mm across, too big for the X2D, so it prints
+as a left and a right half (looking out along the arm); the motor screws clamp both hubs and a block under the ring at
+the outer point joins them with one cross bolt. Print with 3 walls and 15 % infill (the profile in the `.gcode.3mf`).
+
+Before printing the guards, check two things on the drone (both from the online model, so EST):
+- Where the motor's 3 screws sit. The Tarot 4108 uses 3 x M3 on a 27 mm triangle; the hub's slots take that pattern
+  whether 27 mm is the circle or the side, with one screw straight across the arm (`HOLE_ANG0 = 90`). If yours sits
+  another way, set `HOLE_ANG0` in `huntsman_propeller_guard.py` and rerun it.
+- That nothing sticks up from the motor plate where the struts cross it (2 frame bolts beside each motor, 26 mm from
+  its axis). The model shows nothing there.
+
+Motor screws get 3 mm longer than stock (the hub is 3 mm). Use blue threadlocker and check them after the first 3
+flights: PETG settles a little under screws.
+
+Hardware: 30 M2.5 heat-set inserts (6 rod clamps x 3, 6 guard right halves x 1, LiDAR saddle 2, mast 4),
+12 x M2.5 x 6 (clamps to carrier), 6 x M2.5 x 16 (clamp pinch screws), 2 x M2.5 x 10 (LiDAR strap),
+6 x M2.5 x 12 (guard halves), 18 x M3 motor screws 3 mm longer than stock, blue threadlocker,
 1 x 1/4-20 x 1/2 in screw + washer (LiDAR), 2 x 5/32 in x 3/8 in steel dowel pins (LiDAR), 2 x 20 mm velcro straps
-(battery), 1 x 15 mm strap (camera).
+(battery), 1 x 15 mm strap (camera), about 1 m of Dyneema or Kevlar cord (safety cord).
 
 **Fitting it:** the stock battery deck and its clips come off. Loosen the damper clamps, slide the rods out, put 3
-clamps on each rod (grub screws facing out), slide the rods back, then screw the carrier to the clamps from below.
-The clamps sit at 112 mm behind, 40 behind and 56 in front of the frame centre, clear of the dampers.
+clamps on each rod (slits facing the centre), slide the rods back, then screw the carrier (front 4 clamps) and the
+interface-box plate (back 2 clamps) to them from below. The clamps sit at 112 mm behind, 40 behind and 56 in front of
+the frame centre, clear of the dampers. Tighten the 6 pinch screws through the holes in the carrier, then tie the
+safety cord.
+
+## FEA
+
+`FEA/fea.py` meshes the STEP files the Fusion scripts export and solves them (linear static, quadratic tetrahedra;
+`pip install gmsh scikit-fem pyamg matplotlib`, then `python3 fea.py guard` or `python3 fea.py carrier`). Results and
+stress pictures land in `FEA/`. Parts are modelled solid; strengths are conservative (PETG 30 MPa, PAHT-CF 25 MPa
+across layers).
+
+**Payload carrier, 8 g hard landing** (LiDAR 46 N on its wall, battery 52 N in its straps, its own weight; held at
+the 4 clamps): peak 11.5 MPa where the LiDAR wall and its gussets meet the plate, safety factor 2.2. It moves 0.8 mm
+at most, so the LiDAR stays where its static transform says.
+
+**Propeller guard** (held under the motor), against the old arm-clamp guard under the same loads (the old one held
+rigidly at its clamp, which flatters it):
+
+| Load on one guard | New: ring moves toward prop | New: peak stress | Old: ring moves toward prop | Old: peak stress |
+|---|---|---|---|---|
+| 1 kg hand push at the outer point | 5.0 mm | 17 MPa | 27.5 mm | 32 MPa |
+| 1 g (4.3 kg) bump at the outer point | 22 mm | 74 MPa | 118 mm | 137 MPa |
+| 1 g bump from the side | 16 mm | 85 MPa | 107 mm | 130 MPa |
+| 1 g bump between struts | 33 mm | 109 MPa | 76 mm | 97 MPa |
+| lifted by the ring, 1 kg | 9 mm | 50 MPa | 37 mm | 52 MPa |
+
+What it means: the new guard is about 5 times stiffer than the old one for the same weight, and a firm push stays
+under the 8 mm tip gap (5 mm). A full-weight hit on one guard still bends it into the prop and overloads the PETG,
+as it did the old one: the guards stop brushes and pushes, not crashes, and are cheap to reprint. Don't lift the drone
+by the guards. Big deflections are past where a linear model is accurate; read them as "a lot".
 
 ## The LiDAR
 
@@ -98,7 +154,7 @@ sees ±15° across the drone: a strip 1.6 m wide at 3 m up. Its lowest point is 
 
 ## Whole drone
 
-About **4269** g with the guards. The centre of mass is 1.7 mm behind the frame centre and 0.4 mm right, fine to fly. The
+About **4264** g with the guards. The centre of mass is 1.9 mm behind the frame centre and 0.4 mm right, fine to fly. The
 interface box weight is a guess; weigh it and the real centre moves.
 
 Same interference rules as Widow: fly on the GPS compass, turn the Pixhawk's internal compass off, keep the SiK
@@ -107,14 +163,15 @@ throttle before trusting it.
 
 | Parameter | Value |
 |---|---|
-| `EKF2_IMU_POS_X` / `_Y` / `_Z` | 0.002 / 0.000 / -0.067 |
-| `EKF2_GPS_POS_X` / `_Y` / `_Z` | -0.053 / -0.040 / -0.129 |
+| `EKF2_IMU_POS_X` / `_Y` / `_Z` | 0.002 / 0.000 / -0.066 |
+| `EKF2_GPS_POS_X` / `_Y` / `_Z` | -0.053 / -0.040 / -0.128 |
 
-The camera lens is 133 mm forward of the centre of mass and 34 mm below it. It is tilted 10° down so it still sees
-above level when the drone tips forward to fly. The front props, guards and arms cover about 9 % of its view, all in
+The camera lens is 134 mm forward of the centre of mass and 35 mm below it. It is tilted 10° down so it still sees
+above level when the drone tips forward to fly. The front props, guards and arms cover about 14 % of its view, all in
 the top corners. They are always the same close pixels: mask them in software (or drop depth under 0.5 m).
 
 ## Still to measure
 
 Payload rod size and positions, the top plate holes, the interface box, the 12 V step-down, the battery, the prop
-tip height above the motor mounts, the arm tube diameter.
+tip height above the motor plate (`PROP_Z`, 31.8 mm in the model before the 3 mm hub), where the motor screws sit
+(`HOLE_ANG0`), anything sticking up from the motor plate.

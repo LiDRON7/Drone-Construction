@@ -15,10 +15,10 @@ GROUND_Z = -245.3                  # bottom of the skid feet in the model
 TOP = 1.6                          # top face of the top plate
 # must match huntsman_payload.py
 Z_PT, ROD_Y, CLAMP_X, LID_OPT, LID_D, LID_H = -48.0, 30.0, (-112.0, -40.0, 56.0), 37.8, 103.3, 71.7
-LID_AX_X, LID_AX_Z, CAM_C, CAM_LENS, TILT = 41.65, -105.65, (120.14, 20.74), (131.73, 22.79), 10.0   # camera points are print coords
+LID_AX_X, LID_AX_Z, CAM_C, CAM_LENS, TILT = 41.65, -105.65, (120.37, 20.97), (132.16, 23.05), 10.0   # camera points are print coords
 # LiDAR lies with its spin axis across the drone (y), base on the left: it scans front to back
 BAT_X0, BAT_X1 = -24.0, -68.5
-CARRIER_G, CLAMP_G, STRAP_G = 212.8, 6.8, 10.7  # PETG as sliced: payload carrier, each rod clamp, LiDAR strap
+CARRIER_G, CLAMP_G, STRAP_G = 176.4, 6.3, 7.4   # PAHT-CF as sliced (X2D, 221.4 g together, split by volume): carrier + interface-box plate, each rod clamp, LiDAR strap
 HFOV, VFOV = 72.0, 56.0            # OAK-D Pro RGB, deg
 # name: (shape, size, centre, grams). Sizes x, y, z. 'cyl_x' = (diameter, length) along x.
 PARTS = {
@@ -27,7 +27,7 @@ PARTS = {
     'camera Luxonis OAK-D Pro heatsink': ('cam', (8.87, 79, 25), (23.55 - 8.87) / 2 - 0.2 - 14.28, 12),     # fins stop ~9 mm from each end (as Widow)
     'power battery 6S 5200 mAh':         ('box', (43.5, 133, 49.5), ((BAT_X0 + BAT_X1 + 1) / 2, 0, Z_PT - 4 - 24.75), 658),  # listing
     'lidar Velodyne interface box':      ('box', (53, 75, 28), (-102.5, 0, Z_PT - 4 - 14), 80),        # EST size and weight
-    'power step-down 12V (LiDAR)':       ('box', (45, 26, 14), (-97.5, 0, Z_PT + 7), 25),              # EST, on top of the carrier
+    'power step-down 12V (LiDAR)':       ('box', (45, 26, 14), (-102.0, 0, Z_PT + 7), 25),             # EST, on top of the interface-box plate
     'flight controller foam mount':      ('box', (75, 46, 6), (0, 0, TOP + 3), 8),
     'flight controller Pixhawk 6X Mini': ('box', (72.8, 43.4, 31), (0, 0, TOP + 6 + 15.5), 54.49),    # measured, baseboard + FMU
     'computer Raspberry Pi 5 with cooler': ('box', (85, 56, 20), (0, -60, TOP + 10), 99.92),          # measured weight, EST size
@@ -39,7 +39,7 @@ PARTS = {
     'gps H-RTK F9P Helical antenna':     ('cyl_z', (27.5, 59), (-55, 40, TOP + 48 + 12.9 + 29.5), 19),
 }
 # not modelled as blocks (the Tarot model has them, or they spread evenly): weight only, centred on the frame
-SPREAD = {'printed propeller guards + arm clamps x6': (6 * (46.5 + 5.5), 15), 'frame Tarot 680 PRO with landing gear (EST)': (790, -40), 'motors Tarot 4108 380KV x6': (540, 10),
+SPREAD = {'printed propeller guards x6': (6 * 58.2, 15), 'frame Tarot 680 PRO with landing gear (EST)': (790, -40), 'motors Tarot 4108 380KV x6': (540, 10),
           'ESC Aikon AK8 80A x6 (EST)': (300, -10), 'props 1355 x6 (EST)': (180, 25), 'wiring (EST)': (120, -20),
           'printed GPS mast': (38.1, TOP + 25)}
 
@@ -83,11 +83,13 @@ mast = import_step(MAST_STEP, 'printed GPS mast', rot((0, 0, 1), 0, (-55, 40, TO
 strap = import_step(os.path.join(CARRIER, 'lidar-strap.step'), 'printed lidar strap', rot((1, 0, 0), 180, (0, 0, Z_PT)))
 ours = [carrier, mast, strap] + clamps
 GUARD = os.path.join(HUNT, 'Printed Parts', 'Propeller Guard')
-ARM_ANGS, ARM_R, RING_R, RING_Z, RING_HALF = (30, 90, 150, -150, -90, -30), 343.0, 173.75, (6.0, 31.0), 95.0   # huntsman_propeller_guard.py
+MOUNT_Z, HUB_T = -4.89, 3.0      # top of the Tarot motor plate (model); the guard's hub under each motor lifts it this much
+ARM_ANGS, ARM_R, RING_R, RING_Z, RING_HALF = (30, 90, 150, -150, -90, -30), 343.0, 173.75, (MOUNT_Z, MOUNT_Z + 40.8), 95.0   # huntsman_propeller_guard.py
+for o in [o for o in root.allOccurrences if 'motor v5' in o.name or 'propeller v4' in o.name]:
+    T = o.transform2; T.translation = adsk.core.Vector3D.create(T.translation.x, T.translation.y, T.translation.z + cm(HUB_T)); o.transform2 = T
 for a in ARM_ANGS:                     # guard local coords: motor axis at 0, x outward, z = motor mount top
-    M = rot((0, 0, 1), a, (ARM_R * math.cos(math.radians(a)), ARM_R * math.sin(math.radians(a)), 0))
+    M = rot((0, 0, 1), a, (ARM_R * math.cos(math.radians(a)), ARM_R * math.sin(math.radians(a)), MOUNT_Z))
     ours.append(import_step(os.path.join(GUARD, 'propeller-guard.step'), 'printed propeller guard', M))
-    ours.append(import_step(os.path.join(GUARD, 'arm-clamp.step'), 'printed arm clamp', M))
 for name, (shape, size, c, g) in PARTS.items():
     if shape == 'box':
         b = tbm.createBox(adsk.core.OrientedBoundingBox3D.create(P3(*c), V3(1, 0, 0), V3(0, 1, 0), cm(size[0]), cm(size[1]), cm(size[2])))
@@ -133,7 +135,7 @@ def aabb(o):
 leaves = [o for o in root.allOccurrences if o.bRepBodies.count and o.fullPathName.startswith('Tarot 680 PRO frame')]
 boxes = [(o.name, aabb(o)) for o in leaves if 'propeller' not in o.name]
 props = [aabb(o) for o in leaves if 'propeller' in o.name]
-boxes += [(o.component.name, aabb(o)) for o in ours if 'guard' not in o.component.name and 'arm clamp' not in o.component.name and o.component.name not in ('lidar Velodyne Puck LITE', 'printed payload carrier', 'printed lidar strap', 'camera Luxonis OAK-D Pro', 'camera Luxonis OAK-D Pro heatsink')]
+boxes += [(o.component.name, aabb(o)) for o in ours if 'guard' not in o.component.name and o.component.name not in ('lidar Velodyne Puck LITE', 'printed payload carrier', 'printed lidar strap', 'camera Luxonis OAK-D Pro', 'camera Luxonis OAK-D Pro heatsink')]
 def hit(o, d, box, tmax=30000.0):
     t0, t1 = 0.0, tmax
     for i in range(3):
