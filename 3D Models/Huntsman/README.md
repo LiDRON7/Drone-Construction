@@ -22,7 +22,8 @@ Sizes are mm, weights g. The frame numbers come from an online Tarot 680 PRO mod
 | Luxonis OAK-D Pro camera | cradle on the carrier's front, 10° down | **96.96** x **29.45** x **23.15** | **89.69** |
 | Pixhawk 6X Mini | top plate, centre, on its foam, arrow forward | 72.8 x 43.4 x 31 (spec) | **54.49** |
 | Raspberry Pi 5 in its case, with cooler | top plate, right | 85 x 56 x 20 (EST) | **99.92** |
-| Holybro H-RTK F9P Helical | GPS mast (same print as Widow's), top plate, back left | module **53.86** long | **57.25** |
+| Holybro H-RTK F9P Helical | on the metal GPS stand, top plate, back left | module **53.86** long | **57.25** |
+| Metal GPS stand (same as Widow's) | top plate, back left | module sits **170** above the plate; base 22 x 25 and 5 mm rod (EST) | 30 (EST) |
 | SiK 915 MHz telemetry radio | top plate, front left | 53 x 28 x 10.7 (EST) | 15 (EST) |
 | RadioLink R9DS receiver | top plate, front right | 43 x 24 x 15 (spec) | **12.53** |
 | Holybro PM02D | top plate, back | 20 x 16 x 10 (EST) | 20 (EST) |
@@ -43,7 +44,7 @@ Sizes are mm, weights g. The frame numbers come from an online Tarot 680 PRO mod
 The payload carrier, its rod clamps and the LiDAR strap are **PAHT-CF**: they touch the LiDAR (8 W) and sit next to
 the 6S battery in the sun, and PETG-CF goes soft at about 70 °C and slowly lets screws loosen. PAHT-CF takes far more
 heat and holds screws better. Dry it before printing (it soaks up water fast here). Propeller guards are **PETG**
-(they have to bend, not snap). The GPS mast stays PETG-CF.
+(they have to bend, not snap).
 
 | Part | Material | Weight | Holds | Fixed by |
 |---|---|---|---|---|
@@ -52,7 +53,6 @@ heat and holds screws better. Dry it before printing (it soaks up water fast her
 | LiDAR strap | PAHT-CF | 7.4 | the LiDAR's top cap | 2 x M2.5 x 10 up into 2 inserts in the carrier's saddle |
 | Rod clamp (x6) | PAHT-CF | 6.3 each | the carrier and the interface-box plate, on the payload rods | 2 x M2.5 x 6 up through the carrier into 2 inserts; 1 x M2.5 x 16 pinch screw (below) |
 | Propeller guard (x6, 2 halves each) | PETG | 58.2 each | one 13" prop each | its hub sits under the motor: the motor's 3 screws (3 mm longer than stock) hold both halves; halves joined at the ring by 1 x M2.5 x 12 into 1 insert in the right half |
-| GPS mast | PETG-CF | 38.1 | GPS module | Widow's mast; 4 x M2.5 x 6 from under the top plate (drill a 17 mm square of 4 holes if the Tarot plate has none there) |
 
 Carrier, interface-box plate, LiDAR strap and 6 rod clamps print together: 221 g, 9 h 38 min
 (`Printed Parts/Payload Carrier/payload-carrier.gcode.3mf`). Each guard half fills a plate: 29 g, 1 h 28 min
@@ -87,7 +87,7 @@ Before printing the guards, check two things on the drone (both from the online 
 Motor screws get 3 mm longer than stock (the hub is 3 mm). Use blue threadlocker and check them after the first 3
 flights: PETG settles a little under screws.
 
-Hardware: 30 M2.5 heat-set inserts (6 rod clamps x 3, 6 guard right halves x 1, LiDAR saddle 2, mast 4),
+Hardware: 26 M2.5 heat-set inserts (6 rod clamps x 3, 6 guard right halves x 1, LiDAR saddle 2),
 12 x M2.5 x 6 (clamps to carrier), 6 x M2.5 x 16 (clamp pinch screws), 2 x M2.5 x 10 (LiDAR strap),
 6 x M2.5 x 12 (guard halves), 18 x M3 motor screws 3 mm longer than stock, blue threadlocker,
 1 x 1/4-20 x 1/2 in screw + washer (LiDAR), 2 x 5/32 in x 3/8 in steel dowel pins (LiDAR), 2 x 20 mm velcro straps
@@ -98,44 +98,6 @@ clamps on each rod (slits facing the centre), slide the rods back, then screw th
 interface-box plate (back 2 clamps) to them from below. The clamps sit at 112 mm behind, 40 behind and 56 in front of
 the frame centre, clear of the dampers. Tighten the 6 pinch screws through the holes in the carrier, then tie the
 safety cord.
-
-## Rain covers (ASA, collar TPU; weights as sliced)
-
-Same idea as Widow's: fly, land and sit in light to moderate rain, by shedding water, not sealing it out. **Not tested
-yet**, so they are rain covers, not waterproofing. `Fusion Scripts/rain_cover.py` builds them; files are in
-`Printed Parts/Rain Cover` (the collar and visor are Widow's prints).
-
-| Part | Weight | Covers | Fixed by |
-|---|---|---|---|
-| Rain canopy | 91.1 | everything on the top plate: Pixhawk, Pi, radios, step-down, power module, GPS module. Only the GPS antenna pokes out | sits on 3 arm tubes (left, front right, back right); a 12 mm velcro strap through each strap block and round the tube |
-| Antenna collar (TPU) | 4.0 | the roof hole round the GPS antenna | pushed down the antenna onto the roof |
-| Camera visor | 5.7 | the lenses, from above and ahead | VHB tape on the carrier's top, over the cradle |
-| Interface-box cover | 15.4 | the LiDAR interface box, on all four sides; open underneath so the cables drop out in a drip loop | its sheet goes between the plate and the box; the 4 rear clamp screws go through it (use M2.5 x 10 there instead of x 6) |
-| ESC cover (x6) | 11.0 each | each ESC, from above and the sides | roof on the arm tube, 2 zip ties |
-| Motor cap (x6) | 2.7 each | the holes in the top of each motor bell | under the prop, on the prop's 2 screws; it spins with it |
-
-The canopy prints roof-down with no supports (2 h 30 min, `rain-canopy.gcode.3mf`). The ESC covers, motor caps and
-interface-box cover print together (2 h 42 min, `esc-covers-motor-caps-box-cover.gcode.3mf`).
-
-What the rest of the payload relies on:
-- The Puck LITE is sealed by Velodyne (IP67 on the datasheet). Its plug and the interface box are not: the cover
-  handles the box, and the plug gets self-amalgamating tape.
-- The battery hangs under the carrier plate, which is its roof. It stays open at the sides on purpose (heat, gas).
-- 12 V step-down: heat-shrink it. It sits on top of the interface-box plate, half under the frame.
-- The Tarot's bottom plate is the power board. Conformal coat its solder joints and the ESCs; keep it off connectors.
-- Every cable into the canopy comes up from below with a drip loop. Dielectric grease in the battery and ESC plugs.
-
-**Guesses to fix before printing** (marked EST in `rain_cover.py`): I don't have the AK8 ESC's size or where the ESCs
-sit, so the ESC cover is drawn for a 68 x 34 x 18 ESC zip-tied under the arm tube. The motor cap assumes 2 x M3 prop
-screws 12 mm apart and a 46 mm bell. The interface box size is still the 75 x 53 x 28 guess. Measure those three,
-change the numbers, rerun the script.
-
-What it costs: 198 g, 4.7 % more weight, about 7 % less hover time (EST). The LiDAR still sees from straight down to
-past horizontal both ways (103° forward, 96° back; the box cover takes 5° off the back). Camera view unchanged.
-
-Testing is the same five steps as in Widow's README (fit, dry hover with vibration and GPS compared, heat, bench
-spray with indicator paper, then rain). The motor caps spin with the props: if the vibration in the log goes up
-with them on, take them off.
 
 ## FEA
 
@@ -177,7 +139,7 @@ sees ±15° across the drone: a strip 1.6 m wide at 3 m up. Its lowest point is 
 - Turn it so the cable leaves up and forward at 45°; it goes up through the slot in the carrier. Velodyne's 0° mark
   (opposite the cable) then points down and back at 45°, and the top of the LiDAR faces right. Check in RViz before
   setting the static transform.
-- Optical centre from the centre of mass (PX4 frame, forward/right/down): 0.044 / 0.002 / 0.072 m.
+- Optical centre from the centre of mass (PX4 frame, forward/right/down): 0.043 / 0.001 / 0.071 m.
 - Data & Comms is still testing orientations (Sensor-Control-Data-Gathering #61). Only the carrier's wall decides
   it, so a different orientation means reprinting the carrier, nothing else.
 
@@ -192,8 +154,8 @@ sees ±15° across the drone: a strip 1.6 m wide at 3 m up. Its lowest point is 
 
 ## Whole drone
 
-About **4462** g with the guards and rain covers (4264 without the covers). The centre of mass is 2.3 mm behind the
-frame centre and 0.2 mm right, fine to fly. The
+About **4256** g with the guards. The centre of mass is 1.8 mm behind the
+frame centre and 0.5 mm right, fine to fly. The
 interface box weight is a guess; weigh it and the real centre moves.
 
 Same interference rules as Widow: fly on the GPS compass, turn the Pixhawk's internal compass off, keep the SiK
@@ -203,7 +165,7 @@ throttle before trusting it.
 | Parameter | Value |
 |---|---|
 | `EKF2_IMU_POS_X` / `_Y` / `_Z` | 0.002 / 0.000 / -0.064 |
-| `EKF2_GPS_POS_X` / `_Y` / `_Z` | -0.053 / -0.040 / -0.126 |
+| `EKF2_GPS_POS_X` / `_Y` / `_Z` | -0.053 / -0.040 / -0.248 |
 
 The camera lens is 134 mm forward of the centre of mass and 37 mm below it. It is tilted 10° down so it still sees
 above level when the drone tips forward to fly. The front props, guards and arms cover about 14 % of its view, all in
