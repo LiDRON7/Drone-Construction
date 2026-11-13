@@ -200,7 +200,7 @@ def clear(th):
 left = next(th for th in range(0, 181) if not clear(th)) - 1
 right = next(th for th in range(0, 181) if not clear(-th)) - 1
 h3 = 3000.0
-strip = (h3 * math.tan(math.radians(min(left, right))) * 2 / 1000, 2 * h3 * math.tan(math.radians(15)) / 1000)
+strip_w = 2 * h3 * math.tan(math.radians(15)) / 1000   # across the drone: the 16 beams' +/-15 deg
 # camera: rays over its view
 L = (CAM_LENS[0], 0.0, Z_PT - CAM_LENS[1])
 seen = {}
@@ -224,7 +224,7 @@ vp.saveAsImageFile(os.path.join(OUT, 'huntsman-side-view.png'), 1600, 1000)
 em = des.exportManager
 em.execute(em.createFusionArchiveExportOptions(os.path.join(OUT, 'huntsman-full-drone.f3d'), root))
 res = {'clashes': sorted(clashes), 'total_g': round(M_tot, 1), 'cg_mm': [round(v, 1) for v in cg],
-       'lidar_clear_deg_forward_back': [left, right], 'lidar_ground_strip_at_3m_m': [round(v, 2) for v in strip],
+       'lidar_clear_deg_forward_back': [left, right], 'lidar_ground_strip_width_at_3m_m': round(strip_w, 2),
        'lidar_ground_clearance_mm': round(LID_AX_Z - LID_D / 2 - GROUND_Z, 1),
        'camera_rays_blocked': seen, 'camera_rays': n_rays,
        'EKF2_IMU_POS': frd(fmu), 'EKF2_GPS_POS': frd(ant), 'lidar_optical_from_cg_m': frd(O), 'camera_lens_from_cg_m': frd(L)}

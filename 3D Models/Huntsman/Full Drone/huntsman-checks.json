@@ -10,10 +10,7 @@
   103,
   96
  ],
- "lidar_ground_strip_at_3m_m": [
-  -57.09,
-  1.61
- ],
+ "lidar_ground_strip_width_at_3m_m": 1.61,
  "lidar_ground_clearance_mm": 88.0,
  "camera_rays_blocked": {
   "propeller guard ring": 24,
