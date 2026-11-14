@@ -19,7 +19,7 @@ numbers.
 |---|---|---|---|
 | Pixhawk 6X Mini (FMU + baseboard) | top plate, centre (14 mm left), on its foam pads, arrow forward | 72.8 x 43.4 x 31 (spec) | **54.49** |
 | Holybro H-RTK F9P Helical (module + antenna) | on the metal GPS stand at the back right of the top plate (between arms 5 and 6), arrow forward | module **53.86** long, 35.3 wide (EST), 12.9 tall; antenna 27.5 x 59 (spec) | **57.25** |
-| Luxonis OAK-D Pro camera | cradle on the front of the landing-leg mount, 10° down | **96.96** x **29.45** x **23.15** deep (**14.28** body + fins); USB-C **9.45** behind the front face | **89.69** |
+| Luxonis OAK-D Pro camera | cradle on the front of the landing-leg mount, 10° down, **upside down** (USB-C on top, cable straight up; the driver turns the image) | **96.96** x **29.45** x **23.15** deep (**14.28** body + fins); USB-C **9.45** behind the front face | **89.69** |
 | Storm 3S 5500 mAh 11.1 V LiPo | tray in the landing-leg mount, under the battery plate | **135.41** x **43.21** x **31.11** | **361.98** |
 | Raspberry Pi 5 in its case, with active cooler | between the top and bottom plates | case not measured | **99.92** |
 | RadioLink R9DS receiver (with lead) | top plate, front right lobe (over arm 1), velcro | 43 x 24 x 15 (spec) | **12.53** |
