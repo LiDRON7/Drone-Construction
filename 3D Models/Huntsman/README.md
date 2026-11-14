@@ -19,7 +19,7 @@ Sizes are mm, weights g. The frame numbers come from an online Tarot 680 PRO mod
 | Velodyne interface box | under the interface-box plate (behind the carrier), velcro | 75 x 53 x 28 (EST) | 80 (EST) |
 | 12 V step-down for the LiDAR (6S in, 3 A out) | top of the interface-box plate, between the rods, velcro | 45 x 26 x 14 (EST) | 25 (EST) |
 | PowerHobby 6S 5200 mAh 50C LiPo | carrier, across the drone behind the LiDAR, 2 straps | 133 x 43.5 x 49.5 (listing) | 658 (listing) |
-| Luxonis OAK-D Pro camera | cradle on the carrier's front, 10° down | **96.96** x **29.45** x **23.15** | **89.69** |
+| Luxonis OAK-D Pro camera | cradle on the carrier's front, 10° down, **upside down** (USB-C on top, cable straight up; the driver turns the image) | **96.96** x **29.45** x **23.15** | **89.69** |
 | Pixhawk 6X Mini | top plate, centre, on its foam, arrow forward | 72.8 x 43.4 x 31 (spec) | **54.49** |
 | Raspberry Pi 5 in its case, with cooler | top plate, right | 85 x 56 x 20 (EST) | **99.92** |
 | Holybro H-RTK F9P Helical | on the metal GPS stand, top plate, back left | module **53.86** long | **57.25** |
