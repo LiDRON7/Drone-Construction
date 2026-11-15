@@ -2,6 +2,26 @@
 
 LiDRON's drone models and the parts we 3D print for them. Two drones: Widow (test drone) and Huntsman (carries the LiDAR).
 
+## How everything connects
+
+Both drones, power, data and radio, plus the ground station with the RTK base. Dashed boxes are Huntsman only.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/architecture/connections-dark.png">
+  <img alt="Power, data and radio connections on Widow and Huntsman, and the ground station" src="docs/architecture/connections-light.png">
+</picture>
+
+The Pi gets its power from a Yahboom YB-MPP01 board (6 to 24 V in, 5 V / 5 A USB-C PD out). Widow feeds it straight from its 3S. Huntsman's 6S goes up to 25.2 V, over the board's 24 V limit, so on Huntsman it hangs off the 12 V step-down. That step-down also powers the LiDAR and is rated 3 A, so measure the current on the bench before flying. Neither CAD model has the board yet (it is 65 x 56 mm, 32 g).
+
+Edit the diagram by opening `docs/architecture/connections.excalidraw` at [excalidraw.com](https://excalidraw.com).
+
+## Before each drone flies
+
+- Airframe: Generic Hexarotor x (6001) on both. The camera, Pixhawk arrow and GPS arrow all point out of the gap between arms 1 and 2. Run the motor test in QGroundControl's Actuators tab after any change, then recalibrate the compass.
+- `MPC_XY_VEL_MAX` 2.2352 (5 mph) and `COM_OBL_RC_ACT` 4 (land if the autonomy stops sending), see [pi-setup.md](https://github.com/LiDRON7/Sensor-Control-Data-Gathering/blob/main/docs/pi-setup.md).
+- Motor thrust has never been measured on either drone ([#35](https://github.com/LiDRON7/Drone-Construction/issues/35)). The simulator's thrust is a guess, so check hover throttle on the first manual flight (under 65 %).
+- Weigh the drone with everything on and compare it with the README's total.
+
 ## Widow
 
 Storm Drone 6 V3. Parts, sizes and weights: [Widow README](3D%20Models/Widow/README.md).

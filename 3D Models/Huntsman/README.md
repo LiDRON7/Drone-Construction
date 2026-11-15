@@ -27,7 +27,7 @@ Sizes are mm, weights g. The frame numbers come from an online Tarot 680 PRO mod
 | SiK 915 MHz telemetry radio | top plate, front left | 53 x 28 x 10.7 (EST) | 15 (EST) |
 | RadioLink R9DS receiver | top plate, front right | 43 x 24 x 15 (spec) | **12.53** |
 | Holybro PM02D | top plate, back | 20 x 16 x 10 (EST) | 20 (EST) |
-| 5 V step-down for the Pi | top plate, back right | 20 x 16 x 8 (EST) | 15 (EST) |
+| Pi power board, Yahboom YB-MPP01 (CAD still has the old step-down) | top plate, back right | 65 x 56 x 14 (spec) | 32 (spec) |
 | Tarot 4108 380 KV motor (x6), Aikon AK8 80A ESC (x6), 1355 props | arms | | 90 each; ESC 50 each (EST); prop 30 each (EST) |
 
 ## Frame (Tarot 680 PRO, from the online model)
@@ -150,7 +150,7 @@ sees ±15° across the drone: a strip 1.6 m wide at 3 m up. Its lowest point is 
 - **LiDAR data:** LiDAR cable -> interface box -> Ethernet -> Raspberry Pi 5's Ethernet port on the top plate. The
   LiDAR's factory address is 192.168.1.201, so give the Pi's `eth0` a static 192.168.1.x address.
 - **Camera:** OAK-D USB-C up through the carrier's window to the Pi. Short, shielded cable (USB 3 noise reaches the GPS).
-- **Pi power:** 5 V step-down on the top plate.
+- **Pi power:** Yahboom YB-MPP01 board (65 x 56 mm, 32 g, USB-C PD 5 V / 5 A) fed from the 12 V step-down, not the 6S: a full 6S is 25.2 V and the board takes 24 V at most. The step-down is rated 3 A; the LiDAR (about 0.7 A) plus the Pi under load (up to about 2.2 A at 12 V) is close to that, so measure it on the bench or use a second step-down for the Pi. The CAD still shows the old 20 x 16 mm step-down.
 
 ## Whole drone
 
