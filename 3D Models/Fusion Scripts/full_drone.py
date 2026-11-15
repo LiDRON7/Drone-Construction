@@ -3,7 +3,7 @@
 # Saves the assembly into ../Widow/Full Drone/ and one model per bought part into ../Widow/Reference Parts/
 # (HERE is set by run_in_fusion.py).
 # Frame: x forward = the camera side, the gap between the two front arms. The battery plate's tips point at the front
-# and back gaps; its flat sides (and the legs) face the arms at +-90 deg. The GPS mast sits in the front-right gap.
+# and back gaps; its flat sides (and the legs) face the arms at +-90 deg. The GPS stand sits in the back-right gap.
 # y left, z up, mm. Origin = frame centre, bottom face of the bottom plate.
 # Three carbon plates: top star, bottom star, and the battery plate (a hexagon) hanging 12 mm under the bottom star.
 # Every part is its own component with its real (or flagged estimated) mass, so
@@ -17,7 +17,6 @@ PROP_HUB = (27.72, 5.01, 101.61)   # hub centre in the blade file, mm (spin axis
 PROP_HUB_G = 1.0                   # share of the prop weight on the hub body
 GUARD_STEP = os.path.join(HERE, '..', 'Widow', 'Printed Parts', 'Propeller Guard', 'propeller-guard.step')
 BATT_X = -13.0  # battery fore/aft position; the balance trim
-MAST_G = 38.1                 # printed GPS mast, g as sliced
 
 R_MOTOR   = 216.0   # motor centre radius (user-measured neighbour spacing; hexagon side = radius)
 TOP_D     = 150.0   # carbon top plate, scaled from photo 4 (EST +-15 mm): tip-to-tip size of the star below
@@ -35,7 +34,7 @@ ARM_WALL, ARM_FLOOR = 3.0, 2.0   # open-top channel: two side walls + a floor, E
 ARM_TOP   = PLATE_T + GAP        # top of the arms, where the motors sit
 TOP_Z     = ARM_TOP + SPACER     # underside of the top plate
 ARM0      = -30.0                # arm 1 at front right; numbers rise counter-clockwise seen from above (the team's numbering:
-                                 # mast between arms 5 and 6, legs under 6 and 3, battery tips between 1-2 (front) and 4-5)
+                                 # GPS stand between arms 5 and 6, legs under 6 and 3, battery tips between 1-2 (front) and 4-5)
 BP_Z      = -BP_GAP - PLATE_T    # underside of the battery plate
 WITH_GUARDS = True
 
@@ -70,14 +69,14 @@ for i in range(6):
     add(f'propulsion propeller 8x4.5 #{i+1}', 'prop', (19.6, 7.0), (R_MOTOR*cx, R_MOTOR*cy, mz + 20 + 3.5), 8, rz=a)  # real blade mesh + 8 g hub body (EST weight)
     add(f'propulsion ESC F35A #{i+1}', 'box', (30, 16, 5), (140*cx, 140*cy, arm_floor_z(140) + 2.5 + 1.5), 7.5, rz=a)  # +1.5: flat ESC on a sloped floor  # runs inside the arm
     if WITH_GUARDS:
-        add(f'printed propeller guard #{i+1}', 'step', (GUARD_STEP,), (R_MOTOR*cx, R_MOTOR*cy, ARM_TOP), 33.5, rz=a)   # the real printed guard, hub on the arm pad
+        add(f'printed propeller guard #{i+1}', 'step', (GUARD_STEP,), (R_MOTOR*cx, R_MOTOR*cy, ARM_TOP), 33.7, rz=a)   # the real printed guard, hub on the arm pad
 # landing gear: one printed mount takes all 8 screws under the battery plate, holds both legs (leaning out LEAN deg)
 # and the battery tray between them (Printed Parts/Landing Leg, landing_leg.py). The mount is drawn sockets-up, so rx=180
 # hangs it under the plate; the foot is a straight T drawn with its skid along x at its origin, turned on the skid to
 # line up with the leaning tube.
 LEG_DIR = os.path.join(HERE, '..', 'Widow', 'Printed Parts', 'Landing Leg')
-LEG_Y, FL_T, LEAN, TUBE_L = 37.52, 6.0, 20.0, 184.0   # must match leg_y_mm, FL_T, LEAN, tube_l_mm in landing_leg.py
-FOOT_FLOOR = 13.1                                     # foot_floor_mm in landing_leg.py: socket floor from the skid axis
+LEG_Y, FL_T, LEAN, TUBE_L = 37.73, 6.0, 20.0, 184.0   # must match leg_y_mm, FL_T, LEAN, tube_l_mm in landing_leg.py
+FOOT_FLOOR = 13.9                                     # foot_floor_mm in landing_leg.py: socket floor from the skid axis
 sa, ca = math.sin(math.radians(LEAN)), math.cos(math.radians(LEAN))
 add('printed landing leg mount', 'step', (os.path.join(LEG_DIR, 'landing-leg-mount.step'),), (0, 0, BP_Z), 79.2, rx=180)   # as sliced
 for sy in (1, -1):
@@ -91,16 +90,16 @@ for sy in (1, -1):
 
 # --- electronics: the Pi between the plates, the battery and power board under them, the flight parts on the top
 # plate (velcro, Pixhawk on its foam). Kept apart for the compass and GPS: the power board's motor current stays
-# under the bottom plate, the SiK sits on the far lobe from the GPS mast with its antenna out along arm 3.
+# under the bottom plate, the SiK sits on the far lobe from the GPS stand with its antenna out along arm 3.
 FC_Z = TOP_Z + PLATE_T                # top of the top plate: the parts sit here
-SQ_X, SQ_Y = -13.2, -30.5             # EST: centre of the top plate's 17 mm hole square = the mast axis
+SQ_X, SQ_Y = -13.2, -30.5             # EST: centre of the top plate's 17 mm hole square = the GPS stand's axis
 add('flight controller foam mount', 'box', (75, 46, 6), (0, 14, FC_Z + 3), 8)
 add('flight controller Pixhawk 6X Mini baseboard', 'box', (72.8, 43.4, 14.2), (0, 14, FC_Z + 6 + 7.1), 31.5)   # 54.49 g measured with the FMU
 add('flight controller Pixhawk 6X Mini FMU', 'box', (38.8, 31.8, 16.8), (0, 14, FC_Z + 6 + 14.2 + 8.4), 23)
-# printed GPS mast (Printed Parts/GPS Mast, gps_mast.py) on the top plate, module in the cradle 48 mm up
-MAST_STEP = os.path.join(HERE, '..', 'Widow', 'Printed Parts', 'GPS Mast', 'gps-mast.step')
-GPS_Z = FC_Z + 48.0                   # cradle floor top; must match CRADLE_Z + FLOOR in gps_mast.py
-add('printed GPS mast', 'step', (MAST_STEP,), (SQ_X, SQ_Y, FC_Z), MAST_G)
+# bought metal GPS stand (photo IMG_8897): a cone base screwed to the top plate, a thin rod, the module on top
+GPS_Z = FC_Z + 170.0                  # measured: module's underside 170 mm above the plate
+add('gps metal stand base', 'cyl', (22, 25), (SQ_X, SQ_Y, FC_Z + 12.5), 15)                       # EST size and weight
+add('gps metal stand rod', 'cyl', (5, GPS_Z - FC_Z - 25), (SQ_X, SQ_Y, (FC_Z + 25 + GPS_Z)/2), 15)   # EST diameter and weight
 add('gps H-RTK F9P Helical module', 'box', (53.86, 35.3, 12.9), (SQ_X, SQ_Y, GPS_Z + 6.45), 38.25)
 add('gps H-RTK F9P Helical antenna', 'cyl', (27.5, 59), (SQ_X, SQ_Y, GPS_Z + 12.9 + 29.5), 19)      # 57.25 g total measured, split EST
 add('radio telemetry SiK V3 915MHz', 'box', (28, 53, 10.7), (0, 66, FC_Z + 5.35), 15)             # left lobe, over arm 3, ~100 mm from the GPS; EST weight
@@ -113,7 +112,7 @@ add('power module Holybro PM02D', 'box', (20, 16, 10), (0, -40, PLATE_T + 5), 20
 add('misc wiring bundle (placeholder)', 'box', (60, 60, 5), (0, 0, TOP_Z - 3.5), 50)                  # EST
 # under the battery plate: battery strapped in the leg mount's tray, OAK-D Pro in the cradle on the mount's front
 # (landing_leg.py), facing the front (between the two front arms) and TILT deg down. The Pixhawk and GPS arrows point this way too.
-CAM_C, CAM_LENS, TILT = (72.19, 20.74), (83.78, 22.79), 10.0   # cam_centre_print_mm, cam_lens_print_mm, TILT in landing_leg.py
+CAM_C, CAM_LENS, TILT = (72.42, 21.97), (84.21, 24.05), 10.0   # cam_centre_print_mm, cam_lens_print_mm, TILT in landing_leg.py
 CAM_BACK_X = 58.0                                               # CAM_BACK_X in landing_leg.py
 ct, st = math.cos(math.radians(TILT)), math.sin(math.radians(TILT))
 cam_at = lambda k: (CAM_C[0] + k*ct, 0, BP_Z - CAM_C[1] - k*st)   # k mm forward along the camera axis from the pocket centre
@@ -148,7 +147,7 @@ def _cam_ray(d):
         if A_ > 1e-12 and disc >= 0:
             for t in ((-B_ - math.sqrt(disc))/(2*A_), (-B_ + math.sqrt(disc))/(2*A_)):
                 hz = lz + t*d[2]; rel = (math.degrees(math.atan2(t*d[1] - cy, lx + t*d[0] - cx)) - a + 180) % 360 - 180
-                if t > 0 and ARM_TOP <= hz <= ARM_TOP + 28 and abs(rel) <= 95:
+                if t > 0 and ARM_TOP <= hz <= ARM_TOP + 30 and abs(rel) <= 95:
                     return 'guard'
     return None
 _hits, _n = {}, 0
@@ -233,7 +232,7 @@ def build_body(comp, shape, dims):
         child = comp.occurrences.addNewComponent(M); child.component.name = 'blades (mesh)'
         child.component.meshBodies.add(PROP_STL, adsk.fusion.MeshUnits.MillimeterMeshUnit)
         return body, h, child.component
-    elif shape == 'step':  # a real part imported from its STEP (guard, leg connectors, GPS mast); used in its own coordinates
+    elif shape == 'step':  # a real part imported from its STEP (guards, landing leg parts); used in its own coordinates
         im = app.importManager
         im.importToTarget(im.createSTEPImportOptions(dims[0]), comp)
         target = root.allOccurrencesByComponent(comp).item(0)
@@ -337,6 +336,18 @@ on_bottom = [p for p in PARTS if p[1] == 'box' and (abs(p[3][2] - p[2][2]/2 - PL
 on_battery_plate = [('landing leg mount plate', 'box', (34.6, 2*LEG_Y + 36, 6), (0, 0, BP_Z - 3), 0)]
 off_bp = sorted({p[0] for p in on_battery_plate for sx in (-1, 1) for sy in (-1, 1)
                  if not inside((p[3][0] + sx*p[2][0]/2, p[3][1] + sy*p[2][1]/2), bp_pts)})
-{'camera_view_blocked_pct': CAM_BLOCKED_PCT, 'off_bottom_plate': off(on_bottom), 'off_battery_plate': off_bp, 'clashes': clashes, 'total_g': round(pp.mass*1000, 1), 'table_total_g': tm,
+# for the simulator (Simulation/tools/cad_to_sdf.py): every weight and where it sits, the rotors, sensors and skids
+# (mm, this file's frame; skids as boxes x0, y0, z0, x1, y1, z1)
+skid_y, skid_z = LEG_Y + (TUBE_L + FOOT_FLOOR)*sa, BP_Z - FL_T - (TUBE_L + FOOT_FLOOR)*ca
+sim = {'items': [[p[0], p[4], list(p[3]), 0] for p in PARTS],
+       'rotors': [[R_MOTOR*math.cos(math.radians(ARM0 + 60*i)), R_MOTOR*math.sin(math.radians(ARM0 + 60*i)),
+                   ARM_TOP + (2.0 if WITH_GUARDS else 0.0) + 20 + 3.5] for i in range(6)], 'prop_d': 203.0,
+       'imu': [0, 14, FC_Z + 6 + 14.2 + 8.4], 'gps': [SQ_X, SQ_Y, GPS_Z + 12.9 + 29.5],
+       'camera': [lx, 0.0, lz], 'camera_tilt_deg': TILT, 'lidar': None,
+       'skids': [[-110, s*skid_y - 9, skid_z - 9, 110, s*skid_y + 9, skid_z + 9] for s in (1, -1)]}
+res = {'camera_view_blocked_pct': CAM_BLOCKED_PCT, 'off_bottom_plate': off(on_bottom), 'off_battery_plate': off_bp, 'clashes': clashes, 'total_g': round(pp.mass*1000, 1), 'table_total_g': tm,
  'cg_mm': [round(pp.centerOfMass.x*10, 1), round(pp.centerOfMass.y*10, 1), round(pp.centerOfMass.z*10, 1)],
- 'mass_mismatches': bad_mass, 'position_mismatches': bad_pos[:5], 'n_bad_pos': len(bad_pos), 'parts': len(PARTS), 'part_files': len(done)}
+ 'mass_mismatches': bad_mass, 'position_mismatches': bad_pos[:5], 'n_bad_pos': len(bad_pos), 'parts': len(PARTS), 'part_files': len(done), 'sim': sim}
+import json
+open(os.path.join(OUT, 'widow-checks.json'), 'w').write(json.dumps(res, indent=1))
+res

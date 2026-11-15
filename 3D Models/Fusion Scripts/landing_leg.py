@@ -8,8 +8,10 @@
 #   nose  - cradle for the OAK-D Pro camera on the front of the tray, looking forward and TILT deg down, out of the gap
 #           between the two front arms, inside the guards' reach. Camera goes in from below, a 15 mm strap under it holds it.
 #   foot  - straight T: socket for the leg tube on a barrel the skid tube slides through (print 2). It turns on the
-#           skid to meet the leaning leg, so it needs no lean of its own; 2 grub screws lock it.
-# Print coords: the mount's face that meets the drone is on the bed, sockets up; feet socket up. Leg tubes are carbon.
+#           skid to meet the leaning leg, so it needs no lean of its own. The foot is split down its middle from the skid bore
+#           to the leg socket (hinged by the thin bottom and the socket's back wall): 2 x M2.5 x 25 across it clamp the skid.
+# Leg sockets are split clamps (the carbon tubes have no holes): a slit down one side, 2 tabs, 2 x M2.5 x 10 across it into
+# inserts in the far tab. Print coords: the mount's face that meets the drone is on the bed, sockets up; feet socket up. Leg tubes are carbon.
 # Fit 0.3 mm on diameter (snug PETG). All mm. Measured with calipers on the drone (2026-11-09) unless "EST".
 LEG_TUBE, SKID_TUBE = 16.04, 9.89       # measured tube outside diameters
 FIT = 0.3
@@ -17,33 +19,40 @@ LEAN = 20.0                             # deg the legs lean out from vertical (s
 SOCK_D, SOCK_WALL = 25.0, 5.0           # tube depth in each socket, socket wall
 INSERT_D, INSERT_L = 3.6, 4.0           # M2.5 heat-set insert: hole diameter and length (EST: use your inserts' spec)
 SCREW_D = 2.9                           # M2.5 clearance
-CROSS_D = SCREW_D                       # M2.5 cross bolt through socket and tube, into an insert in the far wall
-# mount: 2 squares of 4 holes. Holes 24.62 along x (fore-aft) and 25.95 across; squares 75.05 apart centre to centre
-LEG_Y = (100.59 + 49.51) / 4            # measured over the far holes and the near holes, across the drone
-HOLE_X, HOLE_Y = 24.62, (35.77**2 - 24.62**2) ** 0.5
+SLIT_W, SLIT_L = 1.5, 19.0             # clamp slit down the socket's +x side, from the mouth (stops above the mount's gusset)
+LUG_T, LUG_OUT = 5.0, 6.0               # each clamp tab's thickness beside the slit, how far it reaches past the socket wall
+CLAMP_Z = (4.5, 11.0)                   # clamp screws this far below the mouth
+# mount: 2 squares of 4 holes. Measured 2026-11-13 on the bare plate (IMG_8911-8918) edge to edge between the 2.88 holes,
+# so centre to centre = reading + 2.88: 24.42 along x (fore-aft), 22.33 across, inner holes of the two squares 47.37 apart.
+# Diagonals (34.03 in a square, 54.35 across the hex) agree within 0.3.
+PLATE_HOLE = 2.88
+HOLE_X, HOLE_Y = 24.42 + PLATE_HOLE, 22.33 + PLATE_HOLE
+LEG_Y = (47.37 + PLATE_HOLE + HOLE_Y) / 2   # square centre, across the drone
 FL_T, FL_EDGE, FL_CHAMF = 6.0, 5.0, 2.5
 GUS_R, GUS_H = 15.0, 5.0                # gusset cone where each socket meets the plate
 BAT_W, BAT_L, BAT_H = 43.21, 135.41, 31.11   # measured 3S 5500 mAh
-TRAY_X, NECK_X = 48.0, 22.0             # tray ends reach x = +-TRAY_X; narrow neck up to NECK_X
+TRAY_X, NECK_X = 48.0, 16.0             # tray ends reach x = +-TRAY_X; narrow neck up to NECK_X (rails long enough for closed strap windows)
 RAIL_T, RAIL_H = 2.4, 12.0
-STRAP_W, STRAP_H = 22.0, 3.5            # window for a 20 mm velcro strap, one at each tray end
+STRAP_W, STRAP_H = 22.0, 3.5            # window for a 20 mm velcro strap through both rails, one at each tray end
+STRAP_X0 = NECK_X + 3.0                 # window starts 3 mm in from the rail's inner end: a closed slot, not a hook
 # 2 orange M3 button-head screws stick out of the battery plate under the tray ends, on the centre line near each tip
-# (photo IMG_8836, scaled off the leg squares: EST). The tray face gets a pocket over each head, slotted +-SCREW_SLOT.
-SCREW_X, HEAD_D, HEAD_H, SCREW_SLOT = 46.8, 5.7, 1.65, 2.0
+# (94.46 apart centre to centre, measured 2026-11-13). The tray face gets a pocket over each head, slotted +-SCREW_SLOT.
+SCREW_X, HEAD_D, HEAD_H, SCREW_SLOT = 94.46 / 2, 5.7, 1.65, 2.0
+POCKET_FWD = 10.0                       # the front (camera-end) pocket reaches this much further toward the camera (test fit 2026-11-10)
 POCKET_D, POCKET_H = HEAD_D + 1.5, HEAD_H + 0.7
-STRAP_XC = SCREW_X - SCREW_SLOT - POCKET_D / 2 - 1.5 - STRAP_W / 2   # strap groove centre: stops short of the pocket
 # OAK-D Pro (measured): length, height, depth with fins, body depth without fins, USB-C centre behind the front face
-CAM_L, CAM_H, CAM_D, CAM_BODY, CAM_USB = 96.96, 29.45, 23.15, 14.28, 9.45
-CAM_FIT, TILT = 0.4, 10.0               # TILT: deg down. 10: sees 7.5 deg above level in forward flight; guard edges nick the top corners (1.4 %)
+CAM_L, CAM_H, CAM_D, CAM_BODY, CAM_USB = 96.96, 29.45, 23.15, 15.33, 9.45   # CAM_BODY re-measured 2026-11-10 (was 14.28: too tight)
+CAM_FIT, TILT = 0.8, 10.0               # TILT: deg down. 10: sees 7.5 deg above level in forward flight; guard edges nick the top corners (1.4 %)
 CAM_BACK_X = 58.0                       # camera's lowest back corner; the battery's front end is at 54.7 (BATT_X in full_drone.py)
-NOSE_T, END_T, END_BLOCK = 4.0, 3.0, 16.0   # plate over the camera, end plates, blocks between plate and camera top at each end
+NOSE_T, END_T, END_BLOCK = 5.0, 3.0, 16.0   # plate over the camera, end plates, blocks between plate and camera top at each end
 LIP, LIP_T, LENS_EDGE = 3.5, 2.0, 8.0   # front/back lips over the camera's ends; outer lens edge 8 mm from the end (photo, EST)
 CAM_STRAP_W, CAM_STRAP_T = 17.0, 3.5    # slot in each end plate for a 15 mm velcro strap under the camera
 CAM_G, G_CRASH = 0.0897, 20.0           # kg measured; sideways crash load on the nose
 # foot T: stock T is 38.9 long along the skid; foam sleeves (12 ID, 18 OD) sit either side and must touch ground first
-FOOT_L, SKID_WALL, BOT_WALL, BOT_HW = 38.9, 5.5, 1.6, 5.0   # SKID_WALL holds the grub screw inserts
+FOOT_L, SKID_WALL, BOT_WALL, BOT_HW = 38.9, 6.3, 1.6, 5.0   # SKID_WALL holds the skid clamp screws and their head pockets
 FOAM_OD = 18.0
-SET_X = 15.8                            # 2 x M2.5 grub screws from the top, in inserts, into the skid tube
+SET_X, SKID_Z = 15.8, 8.5               # skid clamp screws: x from centre, height above the skid axis (across y, into inserts)
+SKID_SCREW_L, SKID_HEAD_D = 16.0, 5.0   # M2.5 x 16 (longest on hand), head sunk in a pocket on the -y side so it reaches the insert
 FOOT_S0 = 2.5                           # socket floor this far above the barrel top
 
 # strength self-check: hard landing at G_LAND, a side load of SIDE x that, bending the leg at a socket mouth
@@ -73,12 +82,18 @@ assert sock_od / 2 / ca <= GUS_R - 0.5, 'socket footprint wider than its gusset'
 assert GUS_R + 0.8 <= r_bolt - INSERT_D / 2, 'inserts run into the gusset'
 assert LEG_Y - GUS_R >= rail_in, 'battery runs into a socket'
 assert FL_T >= INSERT_L + 1.5 and HOLE_X / 2 + INSERT_D / 2 + 1.6 <= fl_x / 2, 'plate inserts: walls too thin'
-assert SOCK_WALL >= INSERT_L + 0.8, 'cross bolt insert does not fit in the socket wall'
-assert r_s + SKID_WALL - INSERT_L - 0.3 >= r_s + 0.6 + 0.5, 'grub screw insert runs into the skid bore'
+assert LUG_T >= INSERT_L + 0.6, 'clamp insert does not fit in its tab'
+assert SOCK_D - SLIT_L >= GUS_H + 1 and min(CLAMP_Z) - INSERT_D / 2 >= 2, 'clamp slit runs into the gusset or a screw is too near the mouth'
+assert SLIT_L - (LUG_OUT + 1.0) + (LUG_OUT - 2.5 - INSERT_D / 2) >= max(CLAMP_Z) + INSERT_D / 2 + 0.5, 'clamp screw breaks out of the tab underside'
+assert tear_top + 1.0 <= SKID_Z - INSERT_D / 2 and SKID_Z + INSERT_D / 2 <= zb - 0.2, 'skid clamp screw breaks into the bore or out of the top'
+skid_seat = foot_w - 0.5 - SKID_SCREW_L      # head seat: screw tip stops 0.5 inside the insert face
+assert skid_seat <= -SLIT_W / 2 - 2.0, 'too little plastic under the skid clamp screw head'
+assert tear_top + 0.3 <= SKID_Z - SKID_HEAD_D / 2 and SKID_Z + SKID_HEAD_D / 2 <= zb - 0.3, 'skid screw head pocket breaks into the bore or out of the top'
+assert SET_X + SKID_HEAD_D / 2 <= FOOT_L / 2 - 1.0, 'skid screw head pocket breaks out of the foot end'
 assert 2 * (r_s * math.sqrt(2) - tear_top) <= 10, 'teardrop bridge too long'
 assert max(math.hypot(BOT_HW, bot), (BOT_HW + bot) / math.sqrt(2)) <= FOAM_OD / 2 - 0.5, 'foot reaches the ground before the foam'
 assert zb + FOOT_S0 >= tear_top + 2.5, 'foot socket floor too close to the skid bore'
-assert sock_od / 2 + INSERT_D / 2 + 0.6 <= SET_X <= FOOT_L / 2 - INSERT_D / 2 - 1.5, 'grub screw insert too close to an edge'
+assert sock_od / 2 + INSERT_D / 2 + 0.6 <= SET_X <= FOOT_L / 2 - INSERT_D / 2 - 1.5, 'skid clamp screw too close to the socket or the foot end'
 assert LIP <= LENS_EDGE - 3, 'camera lips cover the outer lenses'
 assert CAM_STRAP_W <= CAM_D + CAM_FIT - 4, 'camera strap slot longer than the camera is deep'
 t_ = math.radians(TILT)
@@ -91,7 +106,8 @@ cam_c = mv(mv(Bk, f_, cD / 2), u_, -cH / 2)                             # camera
 nose_sigma = CAM_G * 9.81 * G_CRASH * (cam_c[0] - TRAY_X) / ((cL + 2 * END_T) * NOSE_T**2 / 6)
 assert SIGMA_LAYER_MPA / nose_sigma >= SF_MIN, f'camera nose stress {nose_sigma:.1f} MPa'
 assert FL_T - POCKET_H >= 2.4, 'tray floor too thin over the screw pockets'
-assert STRAP_XC - STRAP_W / 2 >= fl_x / 2 and STRAP_XC + STRAP_W / 2 <= SCREW_X - SCREW_SLOT - POCKET_D / 2 - 1.0, 'strap groove runs into the screw pocket or the leg plate'
+assert STRAP_X0 + STRAP_W <= TRAY_X - 3, 'strap window does not fit inside the rail: it would open into a hook'
+assert NOSE_T - POCKET_H >= 2.4, 'nose plate too thin over the front screw pocket'
 assert SOCK_WALL >= 2.4 and SKID_WALL >= 2.4 and BOT_WALL >= 1.2 and RAIL_T >= 1.6, 'walls under the FDM minimum'
 
 for d in [d for d in app.documents if d.name.startswith('Widow landing leg')]:
@@ -153,7 +169,7 @@ def cone(comp, z0, r0, z1, r1, body, y0=0.0, y1=0.0):
     li.isSolid = True
     if body:
         li.participantBodies = [body]
-    comp.features.loftFeatures.add(li)
+    return comp.features.loftFeatures.add(li).bodies.item(0)
 
 def combine(comp, target, tools, op):
     coll = adsk.core.ObjectCollection.create()
@@ -178,22 +194,34 @@ def hexagon(sk, cx, cy, z, af):
     return poly(sk, [(cx + r * math.cos(math.radians(60 * i)), cy + r * math.sin(math.radians(60 * i)), z) for i in range(6)])
 
 def leaning_socket(comp, body, py, pz, side, s0, embed, lean=LEAN):
-    # socket on an axis through (0, py, pz) leaning lean deg toward side*y; tube floor s0 up the axis.
-    # Built upright at the origin, then tilted and moved; merge() joins the socket, cut_all() cuts the bore and cross hole.
-    sock = extrude(comp, circle(sketch(comp, 'xy', -embed), (0, 0, -embed), sock_od), NEW, embed + s0 + SOCK_D).bodies.item(0)
+    # socket on an axis through (0, py, pz) leaning lean deg toward side*y; tube floor s0 up the axis. Split clamp on its +x side.
+    # Built upright at the origin, then tilted and moved. Returns (socket, cutters): the caller joins the socket and
+    # cuts with the cutters explicitly (a 2026-11-09 print showed name-based cutting left holes as solid pegs).
+    R, top = sock_od / 2, s0 + SOCK_D
+    xi, xo, xb = R - 1.0, R + LUG_OUT, R + 2.5                         # tab inner/outer x, screw axis x
+    yt = SLIT_W / 2 + LUG_T
+    sock = extrude(comp, circle(sketch(comp, 'xy', -embed), (0, 0, -embed), sock_od), NEW, embed + top).bodies.item(0)
+    lug = extrude(comp, poly(sketch(comp, 'xz'), [(xi, 0, top - SLIT_L), (xo, 0, top - SLIT_L + (xo - xi)), (xo, 0, top), (xi, 0, top)]),
+                  NEW, sym=2 * yt).bodies.item(0)                      # 45 deg underside: prints without support
+    combine(comp, sock, [lug], JOIN)
     hole = extrude(comp, circle(sketch(comp, 'xy', s0), (0, 0, s0), bore), NEW, SOCK_D + 1).bodies.item(0)
-    cross = extrude(comp, circle(sketch(comp, 'yz'), (0, 0, s0 + SOCK_D / 2), CROSS_D), NEW, sym=sock_od + 2).bodies.item(0)
-    xo = sock_od / 2                                                     # insert for the cross bolt in the +x wall
-    ins = extrude(comp, circle(sketch(comp, 'yz', xo), (xo, 0, s0 + SOCK_D / 2), INSERT_D), NEW, sym=2 * (INSERT_L + 0.2)).bodies.item(0)
+    slit = extrude(comp, box_xy(sketch(comp, 'xy', top - SLIT_L), 0, -SLIT_W / 2, xo + 1, SLIT_W / 2, top - SLIT_L), NEW, SLIT_L + 1).bodies.item(0)
+    cut = [hole, slit]
+    for z in CLAMP_Z:
+        zc = top - z
+        sk = sketch(comp, 'xz'); circle(sk, (xb, 0, zc), SCREW_D)
+        cut.append(extrude(comp, sk, NEW, sym=2 * yt + 2).bodies.item(0))   # screw clearance through both tabs
+        sk = sketch(comp, 'xz', yt); circle(sk, (xb, yt, zc), INSERT_D)      # insert pocket centred on one outer tab face
+        cut.append(extrude(comp, sk, NEW, sym=2 * (INSERT_L + 0.3)).bodies.item(0))
     m = adsk.core.Matrix3D.create()
     m.setToRotation(-side * math.radians(lean), adsk.core.Vector3D.create(1, 0, 0), adsk.core.Point3D.create(0, 0, 0))
     t = adsk.core.Matrix3D.create(); t.translation = adsk.core.Vector3D.create(0, cm(py), cm(pz)); m.transformBy(t)
     coll = adsk.core.ObjectCollection.create()
-    for b in (sock, hole, cross, ins):
-        coll.add(b)
-    hole.name = cross.name = ins.name = 'cutter'
+    for b_ in [sock] + cut:
+        coll.add(b_)
     mi = comp.features.moveFeatures.createInput2(coll); mi.defineAsFreeMove(m)
     comp.features.moveFeatures.add(mi)
+    return sock, cut
 
 # ---- mount (print coords: face against the drone's bottom plate on the bed, sockets and tray up; y across the drone)
 mount_occ = part('landing leg mount'); c = mount_occ.component
@@ -211,9 +239,10 @@ for sx in (-1, 1):
         box_xy(sk, sx * NECK_X, sy * rail_in, sx * TRAY_X, sy * (rail_in + RAIL_T), FL_T)
 extrude(c, sk, JOIN, RAIL_H, body=body)                                                                   # side rails
 for side in (-1, 1):
-    leaning_socket(c, body, side * LEG_Y, FL_T, side, 0.0, 1.0)
-    cone(c, FL_T, GUS_R, FL_T + GUS_H, sock_od / 2 - 0.2, None, side * LEG_Y, side * (LEG_Y + GUS_H * ta))
-    body = cut_all(c)                                                                                     # one side at a time
+    sock, cutters = leaning_socket(c, body, side * LEG_Y, FL_T, side, 0.0, 1.0)
+    gus = cone(c, FL_T, GUS_R, FL_T + GUS_H, sock_od / 2 - 0.2, None, side * LEG_Y, side * (LEG_Y + GUS_H * ta))
+    combine(c, body, [sock, gus], JOIN)
+    combine(c, body, cutters, CUT)                                                                        # bore, clamp slit, screws, inserts
 def slab(pts, w_out, w_in=0.0):  # x-z profile (print coords) extruded over w_in <= |y| <= w_out
     xz = lambda: poly(sketch(c, 'xz'), [(x, 0, z) for x, z in pts])
     b = extrude(c, xz(), NEW, sym=2 * w_out).bodies.item(0)
@@ -243,14 +272,14 @@ for sx in (-1, 1):
         for side in (-1, 1):
             circle(sk, (sx * HOLE_X / 2, side * LEG_Y + sy * HOLE_Y / 2, -1), INSERT_D)
 extrude(c, sk, CUT, INSERT_L + 1.5, body=body)                          # insert holes in the face against the plate: M2.5 x 6 from above
-sk = sketch(c, 'xy', FL_T - 2)
+sk = sketch(c, 'xy', FL_T)
 for sx in (-1, 1):
-    xc = sx * STRAP_XC
-    box_xy(sk, xc - STRAP_W / 2, -fl_y, xc + STRAP_W / 2, fl_y, FL_T - 2)
-extrude(c, sk, CUT, 2 + STRAP_H, body=body)                     # strap groove under the battery + windows through both rails
+    x0, x1 = sorted((sx * STRAP_X0, sx * (STRAP_X0 + STRAP_W)))
+    box_xy(sk, x0, -fl_y, x1, fl_y, FL_T)
+extrude(c, sk, CUT, STRAP_H, body=body)                         # closed strap windows through both rails, flush with the floor
 sk = sketch(c, 'xy', -1)
 for sx in (-1, 1):                                              # pockets for the orange screw heads: a slot along x
-    x0, x1, r = sx * SCREW_X - SCREW_SLOT, sx * SCREW_X + SCREW_SLOT, POCKET_D / 2
+    x0, x1, r = sx * SCREW_X - SCREW_SLOT, sx * SCREW_X + SCREW_SLOT + (POCKET_FWD if sx > 0 else 0.0), POCKET_D / 2
     L, A = sk.sketchCurves.sketchLines, sk.sketchCurves.sketchArcs
     L.addByTwoPoints(pt(sk, x0, -r, -1), pt(sk, x1, -r, -1)); L.addByTwoPoints(pt(sk, x0, r, -1), pt(sk, x1, r, -1))
     A.addByThreePoints(pt(sk, x1, -r, -1), pt(sk, x1 + r, 0, -1), pt(sk, x1, r, -1))
@@ -263,19 +292,27 @@ foot_occ = part('landing leg foot'); c = foot_occ.component
 w, d45 = foot_w, foot_w - BOT_HW
 body = extrude(c, poly(sketch(c, 'yz'), [(0, -BOT_HW, -bot), (0, BOT_HW, -bot), (0, w, -bot + d45), (0, w, zb),
                                          (0, -w, zb), (0, -w, -bot + d45)]), NEW, sym=FOOT_L).bodies.item(0)  # 45 deg sides: foam lands first
-leaning_socket(c, body, 0.0, zb, 1, FOOT_S0, 3.0, lean=0.0)
-body = cut_all(c)
+sock, cutters = leaning_socket(c, body, 0.0, zb, 1, FOOT_S0, 3.0, lean=0.0)
+combine(c, body, [sock], JOIN)
+combine(c, body, cutters, CUT)
 extrude(c, circle(sketch(c, 'yz'), (0, 0, 0), skid_bore), CUT, sym=FOOT_L + 2, body=body)
 q, wt = r_s / math.sqrt(2), r_s * math.sqrt(2) - tear_top
 extrude(c, poly(sketch(c, 'yz'), [(0, -q, q), (0, q, q), (0, wt, tear_top), (0, -wt, tear_top)]), CUT, sym=FOOT_L + 2, body=body)
-sk = sketch(c, 'xy', r_s - 1)
+sk = sketch(c, 'xy', 0.0)
+extrude(c, box_xy(sk, -FOOT_L, -SLIT_W / 2, FOOT_L, SLIT_W / 2, 0.0), CUT, zb + FOOT_S0 + 0.3, body=body)   # split: skid bore up into the leg bore
+sk = sketch(c, 'xz')
 for sx in (-SET_X, SET_X):
-    circle(sk, (sx, 0, r_s - 1), SCREW_D)
-extrude(c, sk, CUT, zb - r_s + 2, body=body)                                                    # grub screws down into the skid tube
-sk = sketch(c, 'xy', zb - INSERT_L - 0.3)
+    circle(sk, (sx, 0, SKID_Z), SCREW_D)
+extrude(c, sk, CUT, sym=2 * foot_w + 2, body=body)                                              # skid clamp screws across the split
+sk = sketch(c, 'xz', foot_w)
 for sx in (-SET_X, SET_X):
-    circle(sk, (sx, 0, zb - INSERT_L - 0.3), INSERT_D)
-extrude(c, sk, CUT, INSERT_L + 1.3, body=body)                                                  # their inserts
+    circle(sk, (sx, foot_w, SKID_Z), INSERT_D)
+extrude(c, sk, CUT, sym=2 * (INSERT_L + 0.3), body=body)                                        # their inserts, in one outer face
+yp = (skid_seat - foot_w - 1) / 2
+sk = sketch(c, 'xz', yp)
+for sx in (-SET_X, SET_X):
+    circle(sk, (sx, yp, SKID_Z), SKID_HEAD_D)
+extrude(c, sk, CUT, sym=skid_seat + foot_w + 1, body=body)                                     # head pockets in the other face
 foot = body; foot.name = 'landing leg foot'
 
 OUT = os.path.join(HERE, '..', 'Widow', 'Printed Parts', 'Landing Leg')
