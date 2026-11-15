@@ -40,7 +40,7 @@ Three carbon plates and six truss arms.
 | Top to bottom plate | **39.11** with the **9.12** spacers in (30.0 without) |
 | Bottom plate | same star as the top |
 | Battery plate | hexagon **120.09** across the flats, **105.38** tip to tip (**90.73** tip to far corner), **12** under the bottom plate, tips at the 1-2 and 4-5 gaps, legs under arms 3 and 6 |
-| Leg screw squares (battery plate) | 2 squares of 4 M3, **24.62** fore-aft x **25.95** across, **75.05** apart, left and right of centre |
+| Leg screw squares (battery plate) | 2 squares of 4 M3, **27.30** fore-aft x **25.21** across, **75.46** apart, left and right of centre; orange screws **94.46** apart |
 | Motor spacing | **216** between neighbours |
 | Leg tubes / skid tubes / skid foam | **16.04** / **9.89** OD; foam 12 ID, 18 OD |
 
@@ -52,10 +52,10 @@ change `INSERT_D`/`INSERT_L` in the scripts if yours differ).
 | Part | Weight | Holds | Fixed by |
 |---|---|---|---|
 | Propeller guard (x6) | 33.7 each | one prop each | the motor screws (no insert: they go into the motor) |
-| Landing-leg mount | 79.2 | both legs, the battery and the OAK-D Pro | 8 x M2.5 x 6 from above the battery plate into 8 inserts; 2 x M2.5 x 25 cross bolts into 2 inserts |
-| Landing-leg foot (x2) | 22.4 each | skid tube | M2.5 x 25 cross bolt into 1 insert; 2 x M2.5 x 6 grub screws in 2 inserts |
+| Landing-leg mount | 79.2 | both legs, the battery and the OAK-D Pro | 8 x M2.5 x 6 from above the battery plate into 8 inserts; each leg socket is a split clamp: 2 x M2.5 x 10 across its slit into 2 inserts (no hole in the tube) |
+| Landing-leg foot (x2) | 22.4 each | skid tube | leg socket clamp: 2 x M2.5 x 10 into 2 inserts; the foot is split down the middle, 2 x M2.5 x 16 across it clamp the skid tube (heads sunk in pockets on one face, 2 inserts in the other) |
 
-Inserts for one drone: 8 + 2 (mount) + 2 x 3 (feet) = **16**.
+Inserts for one drone: 8 + 4 (mount) + 2 x 4 (feet) = **20**.
 
 **Propeller guards** are the same style as Huntsman's: a 2 mm hub under the motor, four T-section struts with wide
 roots, and a ring with a solid band at the prop tips, a lip round its top edge, a diagonal lattice below and a fin at

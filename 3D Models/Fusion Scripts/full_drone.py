@@ -75,8 +75,8 @@ for i in range(6):
 # hangs it under the plate; the foot is a straight T drawn with its skid along x at its origin, turned on the skid to
 # line up with the leaning tube.
 LEG_DIR = os.path.join(HERE, '..', 'Widow', 'Printed Parts', 'Landing Leg')
-LEG_Y, FL_T, LEAN, TUBE_L = 37.52, 6.0, 20.0, 184.0   # must match leg_y_mm, FL_T, LEAN, tube_l_mm in landing_leg.py
-FOOT_FLOOR = 13.1                                     # foot_floor_mm in landing_leg.py: socket floor from the skid axis
+LEG_Y, FL_T, LEAN, TUBE_L = 37.73, 6.0, 20.0, 184.0   # must match leg_y_mm, FL_T, LEAN, tube_l_mm in landing_leg.py
+FOOT_FLOOR = 13.9                                     # foot_floor_mm in landing_leg.py: socket floor from the skid axis
 sa, ca = math.sin(math.radians(LEAN)), math.cos(math.radians(LEAN))
 add('printed landing leg mount', 'step', (os.path.join(LEG_DIR, 'landing-leg-mount.step'),), (0, 0, BP_Z), 79.2, rx=180)   # as sliced
 for sy in (1, -1):
